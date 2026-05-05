@@ -33,7 +33,7 @@
 
 ### Запуск из Unity
 
-1. Откройте проект в Unity Hub  
+1. Откройте проект в Unity  
 2. Откройте сцену:  
    `Assets/_Scenes/MainScene.unity`  
 3. Нажмите **Play**
