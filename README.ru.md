@@ -125,7 +125,7 @@ Assets/StreamingAssets/Quests/YourQuest/
 ## Создание квестов
 
 Используется отдельный инструмент:  
-👉 https://github.com/albruevich/Text-Quest-Editor
+👉 [Text Quest Editor](https://github.com/albruevich/Text-Quest-Editor)
 
 Позволяет:
 - визуально создавать локации  
