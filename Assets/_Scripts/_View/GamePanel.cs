@@ -17,6 +17,7 @@ public class GamePanel : MonoBehaviour
 
     [SerializeField] private GameObject parameterTextPref;
     [SerializeField] private GameObject sourcesNode;
+    [SerializeField] private GameObject blockerNode;
 
     [SerializeField] private QuestionCell victoryCell;
     [SerializeField] private QuestionCell defeatCell;
@@ -64,7 +65,10 @@ public class GamePanel : MonoBehaviour
     private int keyboardIndex = -1;
 
     private bool isStartingQuest;
+    public bool IsInputBlocked => isStartingQuest;
+
     private bool showingStartLocation;
+    private bool cancelStartRequested;
 
     #region Inits
 
@@ -85,6 +89,8 @@ public class GamePanel : MonoBehaviour
         mainTextRect.sizeDelta = new Vector2(canvas.rect.width - mainPictureRect.sizeDelta.x, mainTextRect.sizeDelta.y);
         questionsRect.sizeDelta = new Vector2(canvas.rect.width - mainPictureRect.sizeDelta.x, questionsRect.sizeDelta.y);
 
+        blockerNode.SetActive(false);
+
         HandleLocalizations();
 
         Player loadedPlayer = SaveLoadManager.Instance.LoadPlayer();
@@ -104,6 +110,9 @@ public class GamePanel : MonoBehaviour
 
     private void Update()
     {
+        if (IsInputBlocked)
+            return;
+
         if (player != null && Input.GetKeyDown(KeyCode.Escape))
         {
             AudioManager.Instance.PlaySfx(SoundType.Click);
@@ -167,6 +176,8 @@ public class GamePanel : MonoBehaviour
         if (isStartingQuest)
             return;
 
+        cancelStartRequested = false;
+
         AudioManager.Instance.PlaySfx(SoundType.Click);
 
         if (selectedQuest == null)
@@ -177,6 +188,8 @@ public class GamePanel : MonoBehaviour
 
         isStartingQuest = true;
 
+        blockerNode.SetActive(true);
+
         if (selectedQuestIsRemote)
             StartRemoteQuest(selectedQuest.Id);
         else
@@ -185,6 +198,9 @@ public class GamePanel : MonoBehaviour
 
     public void ActionNext()
     {
+        if (IsInputBlocked)
+            return;
+
         if (singlePassage == null)
             return;
 
@@ -198,10 +214,20 @@ public class GamePanel : MonoBehaviour
 
     public void ActionSettings()
     {
+        if (IsInputBlocked)
+            return;
+
         AudioManager.Instance.PlaySfx(SoundType.Click);
 
         SettingsPanel panel = Instantiate(settingsPref, canvas);
         panel.Init(this);
+    }
+
+    public void ActionCloseBlocker()
+    {
+        AudioManager.Instance.PlaySfx(SoundType.Click);
+        cancelStartRequested = true;
+        blockerNode.SetActive(false);
     }
 
     public void AbandonQuest()
@@ -284,6 +310,9 @@ public class GamePanel : MonoBehaviour
 
     public void SelectQuest(QuestShort questShort)
     {
+        if (IsInputBlocked)
+            return;
+
         if (questShort == null)
             return;
 
@@ -424,6 +453,7 @@ public class GamePanel : MonoBehaviour
         if (quest == null)
         {
             Debug.LogWarning("Quest not found: " + questName);
+            EndStartQuestBlock();
             return;
         }
 
@@ -431,14 +461,20 @@ public class GamePanel : MonoBehaviour
         sourcesNode.SetActive(false);
         LocalizeQuestButtons();
         ShowCurrentLocation();
-        StartQuestEnded?.Invoke();
-        isStartingQuest = false;
+        EndStartQuestBlock();
     }
 
     private void StartRemoteQuest(int questId)
     {
         ApiManager.Instance.DownloadQuestPackage(questId, (bytes) =>
         {
+            if (cancelStartRequested)
+            {
+                Debug.Log("Start quest cancelled");
+                EndStartQuestBlock();
+                return;
+            }
+
             string tempRoot = null;
             string tempZipPath = null;
 
@@ -500,6 +536,8 @@ public class GamePanel : MonoBehaviour
             }
             finally
             {
+                blockerNode.SetActive(false);
+
                 try
                 {
                     if (!string.IsNullOrEmpty(tempZipPath) && File.Exists(tempZipPath))
@@ -510,16 +548,28 @@ public class GamePanel : MonoBehaviour
                     Debug.LogWarning("Remote import cleanup warning: " + cleanupEx.Message);
                 }
 
-                StartQuestEnded?.Invoke();
-                isStartingQuest = false;
+                EndStartQuestBlock();
             }
         },
         (error) =>
         {
             Debug.LogWarning("Error downloading quest package: " + error);
-            StartQuestEnded?.Invoke();
-            isStartingQuest = false;
+            EndStartQuestBlock();
         });
+    }
+
+
+    private void SetBlockerVisible(bool visible)
+    {
+        if (blockerNode != null)
+            blockerNode.SetActive(visible);
+    }
+
+    private void EndStartQuestBlock()
+    {
+        isStartingQuest = false;
+        SetBlockerVisible(false);
+        StartQuestEnded?.Invoke();
     }
 
     private void ClearActiveRemoteQuestFolder()
@@ -558,7 +608,7 @@ public class GamePanel : MonoBehaviour
         RemoteQuestSelectionStarted?.Invoke();
 
         bool imageDone = false;
-        bool musicDone = false;
+        bool musicDone = true;
 
         void TryEnd()
         {

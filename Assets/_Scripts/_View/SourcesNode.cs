@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Newtonsoft.Json;
@@ -21,6 +21,7 @@ public class SourcesNode : MonoBehaviour
     [SerializeField] private Button startButton;
 
     private bool showingRemote;
+    private bool serverAvailable;
 
     private void Start()
     {
@@ -44,14 +45,20 @@ public class SourcesNode : MonoBehaviour
 
     public void ActionStart()
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         AudioManager.Instance.PlaySfx(SoundType.Click);
         localRefreshButton.SetActive(false);
-        startButton.interactable = false;
+        SetControlsInteractable(false);
         gamePanel.StartQuest();
     }
 
     public void ActionAddLocalQuest()
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         AudioManager.Instance.PlaySfx(SoundType.Click);
         SaveLoadManager.Instance.OpenQuestsOuterFolder();
 
@@ -60,6 +67,9 @@ public class SourcesNode : MonoBehaviour
 
     public void ActionLocalRefresh()
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         AudioManager.Instance.PlaySfx(SoundType.Click);
         gamePanel.UpdateLocalQuests();
         localRefreshButton.SetActive(false);
@@ -67,6 +77,9 @@ public class SourcesNode : MonoBehaviour
 
     public void OnLocalToggle(Toggle toggle)
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         if (!toggle.isOn)
             return;
 
@@ -76,6 +89,9 @@ public class SourcesNode : MonoBehaviour
 
     public void OnRemoteToggle(Toggle toggle)
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         if (!toggle.isOn)
             return;
 
@@ -94,8 +110,20 @@ public class SourcesNode : MonoBehaviour
     }
 
     private void DisableStartButton() => startButton.interactable = false;
-    private void EnableStartButton() => startButton.interactable = true;
-    private void HandleStartQuestEnded() => startButton.interactable = true;
+    private void EnableStartButton()
+    {
+        if (!gamePanel.IsInputBlocked)
+            startButton.interactable = true;
+    }
+
+    private void HandleStartQuestEnded() => SetControlsInteractable(true);
+
+    private void SetControlsInteractable(bool interactable)
+    {
+        startButton.interactable = interactable;
+        localToggle.interactable = interactable;
+        remoteToggle.interactable = interactable && serverAvailable;
+    }
 
     private void CheckServerAvailability()
     {
@@ -104,10 +132,12 @@ public class SourcesNode : MonoBehaviour
         ApiManager.Instance.GetAllQuests(
             (string result) =>
             {
-                remoteToggle.interactable = true;
+                serverAvailable = true;
+                remoteToggle.interactable = !gamePanel.IsInputBlocked;
             },
             (string error) =>
             {
+                serverAvailable = false;
                 remoteToggle.interactable = false;
             }
         );
@@ -153,6 +183,9 @@ public class SourcesNode : MonoBehaviour
 
     public void SelectLocal()
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         if (gamePanel.CurrentSource == GamePanel.Source.Local)
             return;
 
@@ -167,6 +200,9 @@ public class SourcesNode : MonoBehaviour
 
     public void SelectRemote()
     {
+        if (gamePanel.IsInputBlocked)
+            return;
+
         if (gamePanel.CurrentSource == GamePanel.Source.Remote || !remoteToggle.interactable)
             return;
 

@@ -6,9 +6,11 @@ using System.IO;
 
 public class ApiManager : MonoBehaviour
 {
-    private const string BaseUri = "http://localhost:5205/";
-    private const string GetAllQuestsUri = BaseUri + "quests";
-    private const string GetQuestUri = BaseUri + "quest";
+    // private const string BaseUri = "http://localhost:5205";
+    // private const string BaseUri = "http://localhost:8080";
+    private const string BaseUri = "https://questapi-a9pu.onrender.com";
+    private const string GetAllQuestsUri = BaseUri + "/quests";
+    private const string GetQuestUri = BaseUri + "/quest";
 
     public static ApiManager Instance;
 
