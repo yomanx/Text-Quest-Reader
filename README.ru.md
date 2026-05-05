@@ -22,14 +22,14 @@
 
 ---
 
-## 📸 Demo
+## Demo
 
 <img src="docs/screen_1.webp" width="600">
 <img src="docs/screen_2.webp" width="600">
 
 ---
 
-## 🚀 Быстрый старт
+## Быстрый старт
 
 ### Запуск из Unity
 
@@ -51,7 +51,7 @@
 
 ---
 
-## 📦 Готовые сборки
+## Готовые сборки
 
 Скачать можно здесь:  
 👉 https://github.com/albruevich/QuestReader/releases
@@ -87,7 +87,7 @@ Assets/StreamingAssets/Quests/
 
 ---
 
-## ⚠️ Важно
+## Важно
 
 Имя квеста в `quest.json`:
 
@@ -97,7 +97,7 @@ Assets/StreamingAssets/Quests/
 
 ---
 
-## 🧩 Структура квеста
+## Структура квеста
 
 Каждый квест — отдельная папка:
 
@@ -112,12 +112,12 @@ Assets/StreamingAssets/Quests/YourQuest/
 
 <img src="docs/quest_structure.webp" width="280">
 
-📌 Структура создаётся автоматически в **Text Quest Editor**  
+Структура создаётся автоматически в **Text Quest Editor**  
 Создавать вручную не нужно.
 
 ---
 
-## 🛠 Создание квестов
+## Создание квестов
 
 Используется отдельный инструмент:  
 👉 https://github.com/albruevich/Text-Quest-Editor
@@ -130,7 +130,7 @@ Assets/StreamingAssets/Quests/YourQuest/
 
 ---
 
-## 🌐 Remote квесты (API)
+## Remote квесты (API)
 
 Ридер поддерживает загрузку квестов с сервера.
 
@@ -164,7 +164,7 @@ Assets/StreamingAssets/Quests/YourQuest/
 
 ---
 
-## ⚙️ Требования
+## Требования
 
 ### Unity (из исходников)
 - Unity 6.2+
@@ -174,20 +174,20 @@ Assets/StreamingAssets/Quests/YourQuest/
 
 ---
 
-## 🎨 Ресурсы
+## Ресурсы
 
 - часть изображений сгенерирована AI  
 - звуки и музыка: https://pixabay.com/
 
 ---
 
-## 📄 Лицензия
+## Лицензия
 
 MIT License
 
 ---
 
-## 🙌 Attribution
+## Attribution
 
 Если используете проект:
 
