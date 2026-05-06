@@ -108,7 +108,7 @@ Remote-квесты можно запускать без ручного копи
 - **Add Quests** — открывает папку квестов  
 - **Refresh** — обновляет список  
 
-<img src="docs/add_quests.webp" width="400">
+<img src="docs/add_quests_2.webp" width="400">
 
 Позволяет добавлять квесты без перезапуска приложения.
 
