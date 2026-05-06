@@ -59,7 +59,7 @@
 ## Готові збірки
 
 Завантажити можна тут:
-👉 https://github.com/albruevich/QuestReader/releases
+👉 https://github.com/albruevich/Text-Quest-Reader/releases
 
 ### Як запустити
 
