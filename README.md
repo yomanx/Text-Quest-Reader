@@ -59,7 +59,7 @@ If everything works correctly, the quest will start.
 ## Ready Builds
 
 Downloads are available here:
-👉 https://github.com/albruevich/QuestReader/releases
+👉 https://github.com/albruevich/Text-Quest-Reader/releases
 
 ### How to Run
 
