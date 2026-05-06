@@ -26,7 +26,7 @@
 - хранить отдельно от Unity-сцен
 - использовать в собственных runtime-системах
 
-## Local и Remote квесты
+## Local / Remote квесты
 
 Ридер поддерживает два источника квестов:
 
@@ -80,7 +80,7 @@ Remote-квесты можно запускать без ручного копи
 ## Готовые сборки
 
 Скачать можно здесь:  
-👉 https://github.com/albruevich/Text-Quest-Reader/releases
+👉 [Text Quest Reader Releases](https://github.com/albruevich/Text-Quest-Reader/releases)
 
 ### Как запустить
 
