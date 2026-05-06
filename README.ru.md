@@ -59,7 +59,7 @@
 ## Готовые сборки
 
 Скачать можно здесь:  
-👉 https://github.com/albruevich/QuestReader/releases
+👉 https://github.com/albruevich/Text-Quest-Reader/releases
 
 ### Как запустить
 
