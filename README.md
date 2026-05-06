@@ -7,23 +7,44 @@
 ![Format](https://img.shields.io/badge/data-JSON-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A text quest reader for branching story scenarios inspired by the mechanics of Space Rangers.
+A text quest reader for launching branching story scenarios inspired by the mechanics of the game “Space Rangers”.
 
-Together with [Text Quest Editor](https://github.com/albruevich/Text-Quest-Editor), it forms a system for creating and launching custom text quests.
+Together with the [**Text Quest Editor**](https://github.com/albruevich/Text-Quest-Editor) tool, it forms a system for creating and launching your own text quests.
 
-Unlike similar systems, it is not tied to a specific game or platform — quests can be used in any project.
+Unlike similar solutions, it is not tied to a specific game or platform — quests can be used in any projects.
 
 Supports:
-- locations and transitions
-- parameters and formulas
-- images
-- sounds and music
+- locations and transitions  
+- parameters and formulas  
+- images  
+- sounds and music  
 - local and remote quests (via API)
+- quest language settings
+
+Quests are stored in JSON format, which allows you to:
+- easily transfer them between projects
+- store them separately from Unity scenes
+- use them in your own runtime systems
+
+## Local / Remote quests
+
+The reader supports two quest sources:
+
+- **Local** — quests located in the `StreamingAssets/Quests` folder
+- **Remote** — quests loaded from the server through API
+
+Remote quests can be launched without manually copying files.
+
+If the server is unavailable, the **Remote** tab is automatically disabled.
+
+---
 
 The project is open source and can be used:
-- as a ready-to-use text quest reader
-- as an example of JSON quest integration in Unity
-- as a foundation for creating your own reader with a custom UI
+- as a ready-made text quest reader
+- as a Unity runtime
+- as an example of integrating JSON quests into Unity
+- as a base for creating your own reader with a custom UI
+- as a foundation for modifying UI and logic for your own projects
 
 ---
 
@@ -38,75 +59,84 @@ The project is open source and can be used:
 
 ### Launching from Unity
 
-1. Open the project in Unity
-2. Open the scene:
-   `Assets/_Scenes/MainScene.unity`
+1. Open the project in Unity  
+2. Open the scene:  
+   `Assets/_Scenes/MainScene.unity`  
 3. Press **Play**
 
 ---
 
-### Testing
+### Checking functionality
 
 After launch:
 
-- select a quest (for example, **Asteroid Station**)
-- click **Start Selected Quest**
+- select a quest (for example, **Asteroid Station**)  
+- press **Start Quest**
 
-If everything works correctly, the quest will start.
+If everything is correct — the quest will start.
 
 ---
 
 ## Ready Builds
 
-Downloads are available here:
-👉 https://github.com/albruevich/Text-Quest-Reader/releases
+You can download them here:  
+👉 [Text Quest Reader Releases](https://github.com/albruevich/Text-Quest-Reader/releases)
 
-### How to Run
+### How to launch
 
-1. Download the archive for your platform
-2. Extract it
-3. Run the `.exe` / `.app`
-
----
-
-## Adding Quests
-
-There are two ways:
-
-### 1. Via Folder
-
-Place the quest into:
-
-Assets/StreamingAssets/Quests/
+1. Download the archive for your platform  
+2. Extract it  
+3. Windows: run the `.exe` file  
+4. macOS: open the `.dmg` and move the application to Applications
 
 ---
 
-### 2. Via Interface
+## Adding quests
 
-- **Add Quests** — opens the quest folder
-- **Refresh** — refreshes the list
+The reader supports:
+- local quests
+- remote quests (Remote/API)
 
-<img src="docs/add_quests.webp" width="400">
+### 1. Local quests through a folder in the Unity project
 
-Allows adding quests without restarting the application.
+Place the quest folder into:
+
+`Assets/StreamingAssets/Quests/`
+
+### 2. Local quests through the application interface
+
+- **Add Quests** — opens the quest folder  
+- **Refresh** — refreshes the list  
+
+<img src="docs/add_quests_2.webp" width="400">
+
+Allows adding local quests without restarting the application.
+
+### 3. Remote quests
+
+Remote quests are published through [**Text Quest Editor**](https://github.com/albruevich/Text-Quest-Editor).
+
+After publication, the quest automatically becomes available in the **Remote** section inside **Text Quest Reader**.
 
 ---
 
-## Important
+## Important for local quests
 
-The quest name inside `quest.json`:
+The quest name in `quest.json`:
 
+```json
 "questName": "YourQuest"
+```
 
 must match the folder name.
 
 ---
 
-## Quest Structure
+## Quest structure
 
-Each quest is stored as a separate folder:
+Each quest is a separate folder:
 
-Assets/StreamingAssets/Quests/YourQuest/
+`Assets/StreamingAssets/Quests/YourQuest/`
 
 ### Contents:
 
@@ -117,33 +147,35 @@ Assets/StreamingAssets/Quests/YourQuest/
 
 <img src="docs/quest_structure.webp" width="280">
 
-The structure is created automatically in **Text Quest Editor**.
-No manual setup is required.
+The structure is created automatically in [**Text Quest Editor**](https://github.com/albruevich/Text-Quest-Editor)  
+No need to create it manually.
 
 ---
 
-## Creating Quests
+## Creating quests
 
-A separate tool is used:
-👉 [Text Quest Editor](https://github.com/albruevich/Text-Quest-Editor)
+A separate tool is used for this:  
+👉 [**Text Quest Editor**](https://github.com/albruevich/Text-Quest-Editor)
 
 Allows you to:
-- visually create locations
-- configure parameters
-- define transitions
-- export a ready-to-use quest
+- visually create locations  
+- configure parameters  
+- define transitions  
+- export a finished quest
+- publish quests to the server
+- update remote quests
 
 ---
 
-## Remote Quests (API)
+## Remote quests (API)
 
 The reader supports loading quests from a server.
 
 ### Features
 
-- viewing available quests
-- downloading quests without manual file copying
-- launching remote quests
+- viewing the list of remote quests  
+- loading without manually copying files  
+- launching quests directly from the server
 
 ---
 
@@ -152,14 +184,14 @@ The reader supports loading quests from a server.
 ### Unity (from source)
 - Unity 6.4+
 
-### Ready Builds
-- Unity installation is not required
+### Ready builds
+- Unity installation is not required 
 
 ---
 
 ## Resources
 
-- some images were generated with AI
+- some images were generated by AI  
 - sounds and music: https://pixabay.com/
 
 ---
@@ -170,10 +202,10 @@ MIT License
 
 ---
 
-## Project Usage
+## Using the project
 
-If you use the project as a base for your own project or reuse parts of the code:
+If you use the project as a basis for your own project or borrow parts of the code:
 
-- mention the author: **albruevich**
-- add a link:
+- specify the author: **albruevich**  
+- add the link:  
   https://github.com/albruevich/Text-Quest-Reader
