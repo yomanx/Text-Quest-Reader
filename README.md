@@ -89,6 +89,26 @@ You can download them here:
 3. Windows: run the `.exe` file  
 4. macOS: open the `.dmg` and move the application to Applications
 
+## macOS Security Warning
+
+If macOS blocks the application with a message like:
+
+> “App cannot be opened because it is from an unidentified developer”
+
+Do the following:
+
+1. Open:
+   `System Settings → Privacy & Security`
+
+2. Scroll down to the security section
+
+3. Press:
+   **Open Anyway**
+
+4. Confirm launching the application
+
+After the first launch, the application will open normally.
+
 ---
 
 ## Adding quests
