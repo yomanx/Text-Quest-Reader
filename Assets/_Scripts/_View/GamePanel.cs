@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using TextQuestReader.Cinematic;
+using TextQuestReader.Cinematic.Procedural;
 using TextQuestReader.Monetization;
 using TextQuestReader.View;
 using UnityEngine;
@@ -90,6 +91,26 @@ public class GamePanel : MonoBehaviour
         EnsureCinematicService();
         EnsureMonetizationService();
         EnsureResultScreen();
+        EnsureProceduralBackground();
+        EnsureMainMenuSkin();
+    }
+
+    private ProceduralSceneRenderer proceduralBackground;
+
+    private void EnsureProceduralBackground()
+    {
+        if (proceduralBackground != null) return;
+        if (mainPictureRect == null) return;
+        proceduralBackground = ProceduralSceneRenderer.Attach(mainPictureRect, siblingIndex: 0);
+    }
+
+    private MainMenuTerminalSkin mainMenuSkin;
+
+    private void EnsureMainMenuSkin()
+    {
+        if (mainMenuSkin != null) return;
+        if (canvas == null) return;
+        mainMenuSkin = MainMenuTerminalSkin.Attach(canvas);
     }
 
     private void EnsureResultScreen()
@@ -135,6 +156,9 @@ public class GamePanel : MonoBehaviour
         blockerNode.SetActive(false);
 
         HandleLocalizations();
+
+        if (proceduralBackground != null)
+            proceduralBackground.ShowPreset("terminal_room", instant: true);
 
         Player loadedPlayer = SaveLoadManager.Instance.LoadPlayer();
 
@@ -364,6 +388,9 @@ public class GamePanel : MonoBehaviour
         parameterService.ClearParams();
         pictureNode.ClearPicturesColor();
 
+        if (proceduralBackground != null)
+            proceduralBackground.ShowPreset("terminal_room");
+
         sourcesNode.SetActive(true);
         nextCell.gameObject.SetActive(false);
         victoryCell.gameObject.SetActive(false);
@@ -459,6 +486,23 @@ public class GamePanel : MonoBehaviour
         mainText.SetText($"<b>{title}</b>\n\n{questShort.Description}");
         pictureNode.SetNewPicture(questShort.StartImage, questShort.QuestName, mayBeSame: true);
         AudioManager.Instance.PlayMusic(questShort.StartMusic, questShort.QuestName, stoppable: true);
+
+        if (proceduralBackground != null)
+        {
+            string presetKey = ResolveCatalogPresetKey(questShort);
+            proceduralBackground.ShowPreset(presetKey);
+        }
+    }
+
+    private string ResolveCatalogPresetKey(QuestShort questShort)
+    {
+        if (questShort == null) return "deep_space";
+        if (!string.IsNullOrEmpty(questShort.StartImage)) return questShort.StartImage;
+
+        string name = questShort.QuestName?.ToLowerInvariant() ?? string.Empty;
+        if (name.Contains("asteroid") || name.Contains("space")) return "deep_space";
+        if (name.Contains("victory")) return "victory_scene";
+        return "terminal_room";
     }
 
     public void UpdateLocalQuests(string questNameToSelect = null)
@@ -968,11 +1012,16 @@ public class GamePanel : MonoBehaviour
         string imageName = textParser.ExtractLastTagValue(ref text, "im");
         string musicName = textParser.ExtractLastTagValue(ref text, "mu");
         string soundName = textParser.ExtractLastTagValue(ref text, "so");
+        string bgName = textParser.ExtractLastTagValue(ref text, "bg");
 
         List<CinematicTagInfo> cinematicTags = CinematicTagParser.ExtractFromText(ref text, textParser);
 
         if (!string.IsNullOrEmpty(imageName))
             pictureNode.SetNewPicture(imageName, player.quest.questName, mayBeSame: false);
+
+        string proceduralKey = !string.IsNullOrEmpty(bgName) ? bgName : imageName;
+        if (!string.IsNullOrEmpty(proceduralKey) && proceduralBackground != null)
+            proceduralBackground.ShowPreset(proceduralKey);
 
         if (!string.IsNullOrEmpty(musicName))
             AudioManager.Instance.PlayMusic(musicName, player.quest.questName, stoppable: false);

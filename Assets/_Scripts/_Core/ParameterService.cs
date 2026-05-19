@@ -138,6 +138,8 @@ public class ParameterService
             int delta = wasKnown ? parameter.value - prevValue : 0;
             bool nearCritical = IsNearCritical(parameter);
 
+            animator.SetCriticalState(nearCritical);
+
             if (!wasKnown)
                 animator.PlayAppear();
             else if (delta != 0 || nearCritical)

@@ -186,9 +186,71 @@ These have been in the reader since day one and still work.
 
 | Tag | Effect |
 |-----|--------|
-| `<im imagename im>` | Crossfade to image `Images/imagename.png` or `.jpg`. |
+| `<im imagename im>` | Crossfade to image `Images/imagename.png` or `.jpg`. **If the file is missing, the reader auto-falls back to a procedural background with the same name** (see below). |
 | `<mu musicname mu>` | Crossfade music to `Musics/musicname.ogg`/`mp3`/`wav`. |
-| `<so soundname so>` | Play one-shot SFX `Sounds/soundname.ogg`/`wav`. |
+| `<so soundname so>` | Play one-shot SFX `Sounds/soundname.ogg`/`wav`. Missing files fall back to procedural beeps for a known list of names (alarm, click, beep, tada, door_hiss, console_hum, heart_monitor, radio_static, paper_rustle, med_inject, explosion_small, soft_static). |
+
+## Procedural backgrounds — `<bg name bg>` (new)
+
+A scene background can be picked entirely procedurally — no image asset
+required. Use `<bg name bg>` in any description text, or let `<im name im>`
+fall through to the procedural fallback when no PNG exists.
+
+| Preset name | Mood |
+|-------------|------|
+| `deep_space` | Drifting stars, cool blue gradient, light vignette |
+| `cryo_pod` | Cold blue with red emergency pulse, frost sparkles |
+| `neon_corridor` | Red emergency, scanlines, light beams |
+| `terminal_room` | Cyan grid + radial glow + sparkles (default main-menu look) |
+| `reactor_core` | Orange pulse, sparks, glow |
+| `med_bay` | Clinical green, soft pulse |
+| `comms_array` | White-noise stars + heavy scanlines + light beams |
+| `storage_dim` | Warm dim, low scanlines |
+| `hidden_lab` | Purple grid + violet glow + sparkles |
+| `server_room` | Cool grid + scanlines + cyan pulse |
+| `cargo_hold` | Industrial warm orange glow |
+| `observation_deck` | Deep starfield + magenta pulsing asteroid |
+| `quarters_warm` | Warm dim, soft slow pulse |
+| `alarm_state` | Red alarm pulse + light beams + scanlines |
+| `black_void` | Pure black with faint red pulse — death moments |
+| `victory_scene` | Bright starfield + gold radial glow + light beams |
+| `secret_signal` | Purple/violet starfield + sparkles + beams |
+| `failure_scene` | Dark red, slow pulse, heavy vignette |
+
+Alias names also resolve to the right preset:
+
+| Quest-friendly name | Resolves to |
+|---------------------|-------------|
+| `preview`, `main_hub` | `terminal_room` |
+| `cryo_pod` | `cryo_pod` |
+| `corridor` | `neon_corridor` |
+| `bridge` | `deep_space` |
+| `medbay` | `med_bay` |
+| `reactor`, `engine_bay` | `reactor_core` |
+| `comms` | `comms_array` |
+| `storage` | `storage_dim` |
+| `hidden_lab` | `hidden_lab` |
+| `server_room` | `server_room` |
+| `cargo` | `cargo_hold` |
+| `observation` | `observation_deck` |
+| `quarters` | `quarters_warm` |
+| `airlock` | `alarm_state` |
+| `signal_sent` | `victory_scene` |
+| `suffocation` | `black_void` |
+| `truth` | `secret_signal` |
+
+Unknown names fall back to `deep_space`. The system is alias-driven, so
+existing quests that use `<im observation im>` get the `observation_deck`
+look for free, even with no asteroid PNG on disk.
+
+To force a procedural background regardless of image presence, use the
+explicit tag:
+
+```
+<bg reactor_core bg>The reactor screams.
+```
+
+`<bg>` always wins over `<im>` if both are present.
 
 You can put any number of these anywhere in `descriptions` or `description`.
 Only the last value for each tag wins (so `<im A im>...<im B im>` ends up

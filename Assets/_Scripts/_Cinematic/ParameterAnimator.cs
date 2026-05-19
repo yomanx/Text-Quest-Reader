@@ -1,4 +1,5 @@
 using System.Collections;
+using TextQuestReader.Cinematic.Procedural;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,9 @@ namespace TextQuestReader.Cinematic
         private bool originalCaptured;
         private Coroutine pulseRoutine;
         private CanvasGroup canvasGroup;
+        private Image hudFrame;
+        private float hudBlinkPhase;
+        private bool hudCritical;
 
         private void EnsureCanvasGroup()
         {
@@ -29,6 +33,48 @@ namespace TextQuestReader.Cinematic
                 originalScale = transform.localScale;
                 originalCaptured = true;
             }
+
+            EnsureHudFrame();
+        }
+
+        private void EnsureHudFrame()
+        {
+            if (hudFrame != null) return;
+
+            GameObject go = new GameObject("HudFrame", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            go.transform.SetParent(transform, false);
+            go.transform.SetAsFirstSibling();
+
+            RectTransform rt = (RectTransform)go.transform;
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = new Vector2(-6f, -3f);
+            rt.offsetMax = new Vector2(6f, 3f);
+
+            hudFrame = go.GetComponent<Image>();
+            hudFrame.raycastTarget = false;
+            hudFrame.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(new Color(0.20f, 0.60f, 0.95f, 1f), 12, 48);
+            hudFrame.type = Image.Type.Sliced;
+            hudFrame.color = new Color(0.20f, 0.60f, 0.95f, 0.12f);
+        }
+
+        public void SetCriticalState(bool critical)
+        {
+            EnsureCanvasGroup();
+            hudCritical = critical;
+            if (hudFrame == null) return;
+            hudFrame.color = critical
+                ? new Color(1f, 0.30f, 0.30f, 0.20f)
+                : new Color(0.20f, 0.60f, 0.95f, 0.12f);
+        }
+
+        private void Update()
+        {
+            if (hudFrame == null || !hudCritical) return;
+            hudBlinkPhase += Time.deltaTime * 6f;
+            float a = 0.20f + 0.20f * Mathf.Abs(Mathf.Sin(hudBlinkPhase));
+            Color c = hudFrame.color;
+            hudFrame.color = new Color(c.r, c.g, c.b, a);
         }
 
         public void PlayChange(int delta, bool isCritical)

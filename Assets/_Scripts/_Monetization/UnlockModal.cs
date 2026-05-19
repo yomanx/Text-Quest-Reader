@@ -1,4 +1,5 @@
 using System;
+using TextQuestReader.Cinematic.Procedural;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,9 +35,27 @@ namespace TextQuestReader.Monetization
             prt.anchorMin = new Vector2(0.5f, 0.5f);
             prt.anchorMax = new Vector2(0.5f, 0.5f);
             prt.pivot = new Vector2(0.5f, 0.5f);
-            prt.sizeDelta = new Vector2(520f, 320f);
+            prt.sizeDelta = new Vector2(560f, 360f);
             Image bg = panel.GetComponent<Image>();
-            bg.color = new Color(0.10f, 0.11f, 0.16f, 0.98f);
+            bg.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(new Color(0.06f, 0.08f, 0.14f, 1f), 18, 96);
+            bg.type = Image.Type.Sliced;
+            bg.color = new Color(1f, 1f, 1f, 0.98f);
+
+            ProceduralSceneRenderer backdrop = ProceduralSceneRenderer.Attach(prt, siblingIndex: 0);
+            backdrop.ShowPreset("hidden_lab", instant: true);
+
+            GameObject frame = new GameObject("Frame", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            frame.transform.SetParent(panel.transform, false);
+            RectTransform frt = (RectTransform)frame.transform;
+            frt.anchorMin = Vector2.zero;
+            frt.anchorMax = Vector2.one;
+            frt.offsetMin = new Vector2(-4f, -4f);
+            frt.offsetMax = new Vector2(4f, 4f);
+            Image frameImg = frame.GetComponent<Image>();
+            frameImg.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(new Color(0.5f, 0.8f, 1f, 1f), 22, 96);
+            frameImg.type = Image.Type.Sliced;
+            frameImg.color = new Color(0.5f, 0.85f, 1f, 0.55f);
+            frameImg.raycastTarget = false;
 
             CreateLabel(panel.transform, product.displayName ?? product.id, 24, FontStyles.Bold, new Vector2(0f, 0.78f), new Vector2(1f, 0.95f), TextAlignmentOptions.Center);
             CreateLabel(panel.transform, product.description ?? "Unlock premium quest content.", 16, FontStyles.Normal, new Vector2(0.05f, 0.34f), new Vector2(0.95f, 0.75f), TextAlignmentOptions.TopLeft);

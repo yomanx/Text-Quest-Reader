@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TextQuestReader.Cinematic;
+using TextQuestReader.Cinematic.Procedural;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,7 +85,10 @@ namespace TextQuestReader.View
             rrt.offsetMin = Vector2.zero;
             rrt.offsetMax = Vector2.zero;
             Image bg = root.GetComponent<Image>();
-            bg.color = victory ? new Color(0.03f, 0.05f, 0.12f, 0.88f) : new Color(0.10f, 0.02f, 0.02f, 0.90f);
+            bg.color = victory ? new Color(0.02f, 0.03f, 0.07f, 0.92f) : new Color(0.07f, 0.01f, 0.02f, 0.94f);
+
+            ProceduralSceneRenderer backdrop = ProceduralSceneRenderer.Attach(rrt, siblingIndex: 0);
+            backdrop.ShowPreset(victory ? "victory_scene" : "failure_scene", instant: true);
 
             GameObject titleGo = new GameObject("Title", typeof(RectTransform));
             titleGo.transform.SetParent(root.transform, false);

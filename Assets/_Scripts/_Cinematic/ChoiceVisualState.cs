@@ -1,3 +1,4 @@
+using TextQuestReader.Cinematic.Procedural;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,8 @@ namespace TextQuestReader.Cinematic
     {
         private Image accentBar;
         private Image moodIcon;
+        private Image glowFringe;
+        private float glowPhase;
         private ChoiceMood mood = ChoiceMood.Normal;
 
         private static readonly Color NormalColor = new Color(0.45f, 0.55f, 0.75f, 1f);
@@ -34,7 +37,7 @@ namespace TextQuestReader.Cinematic
 
         public void EnsureBuilt()
         {
-            if (accentBar != null && moodIcon != null) return;
+            if (accentBar != null && moodIcon != null && glowFringe != null) return;
 
             RectTransform host = (RectTransform)transform;
 
@@ -68,8 +71,43 @@ namespace TextQuestReader.Cinematic
 
                 moodIcon = icon.GetComponent<Image>();
                 moodIcon.raycastTarget = false;
-                moodIcon.color = NormalColor;
+                moodIcon.sprite = ProceduralTextureFactory.CreateRadialGlowSprite(NormalColor, 1.8f, 64);
+                moodIcon.color = Color.white;
             }
+
+            if (glowFringe == null)
+            {
+                GameObject fringe = new GameObject("Glow", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                fringe.transform.SetParent(host, false);
+                RectTransform rt = (RectTransform)fringe.transform;
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.anchorMax = new Vector2(1f, 1f);
+                rt.offsetMin = new Vector2(-22f, -8f);
+                rt.offsetMax = new Vector2(22f, 8f);
+                glowFringe = fringe.GetComponent<Image>();
+                glowFringe.raycastTarget = false;
+                glowFringe.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(NormalColor, 28, 96);
+                glowFringe.color = new Color(NormalColor.r, NormalColor.g, NormalColor.b, 0f);
+                glowFringe.type = Image.Type.Sliced;
+                rt.SetAsFirstSibling();
+            }
+        }
+
+        private void Update()
+        {
+            if (glowFringe == null) return;
+            if (mood == ChoiceMood.Locked) return;
+            glowPhase += Time.deltaTime * 1.4f;
+            float wave = 0.5f + 0.5f * Mathf.Sin(glowPhase);
+            Color c = MoodToColor(mood);
+            float baseAlpha = mood switch
+            {
+                ChoiceMood.Danger => 0.30f,
+                ChoiceMood.Reward => 0.30f,
+                ChoiceMood.Story => 0.25f,
+                _ => 0.16f
+            };
+            glowFringe.color = new Color(c.r, c.g, c.b, baseAlpha * wave + 0.08f);
         }
 
         public void SetMood(ChoiceMood newMood)
@@ -79,6 +117,11 @@ namespace TextQuestReader.Cinematic
             Color c = MoodToColor(mood);
             if (accentBar != null) accentBar.color = c;
             if (moodIcon != null) moodIcon.color = c;
+            if (glowFringe != null)
+            {
+                if (mood == ChoiceMood.Locked)
+                    glowFringe.color = new Color(c.r, c.g, c.b, 0f);
+            }
         }
 
         public static ChoiceMood InferFromText(string text)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TextQuestReader.Cinematic;
 using TextQuestReader.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -288,6 +289,9 @@ public class AudioManager : MonoBehaviour
         yield return StartCoroutine(LoadAudioClip("Sounds", sfxName, questName, loadedClip => clip = loadedClip));
 
         if (clip == null)
+            clip = ProceduralAudio.GetClip(sfxName);
+
+        if (clip == null)
             yield break;
 
         sfxSource.PlayOneShot(clip);
@@ -323,7 +327,8 @@ public class AudioManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(resolvedPath))
         {
-            Debug.LogWarning($"Audio not found. Quest: {questName}, Folder: {folderName}, Name: {audioNameWithoutExtensionOrWithIt}");
+            if (!ProceduralAudio.HasMappingFor(audioNameWithoutExtensionOrWithIt))
+                Debug.Log($"[AudioManager] Asset missing, using procedural fallback if available. Quest: {questName}, Folder: {folderName}, Name: {audioNameWithoutExtensionOrWithIt}");
             onLoaded?.Invoke(null);
             yield break;
         }

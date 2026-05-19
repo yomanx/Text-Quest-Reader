@@ -10,6 +10,37 @@ optional tags or when the user enables the related toggle in Settings.
 
 ## What was added
 
+### Procedural graphics layer (no external assets required)
+- **Generated runtime textures** for every visual primitive — vertical
+  gradients, radial glows, scanlines, grids, beams, vignettes, noise, rounded
+  rectangles, corner brackets, glowing dots. All built by
+  `ProceduralTextureFactory` in `_Cinematic/Procedural/`. No PNG/JPG bundled
+  for the layer.
+- **`ProceduralBackgroundPresets`** — 18 named scene presets
+  (`cryo_pod`, `neon_corridor`, `terminal_room`, `reactor_core`, `med_bay`,
+  `comms_array`, `storage_dim`, `hidden_lab`, `server_room`, `cargo_hold`,
+  `observation_deck`, `quarters_warm`, `alarm_state`, `black_void`,
+  `deep_space`, `victory_scene`, `secret_signal`, `failure_scene`). Quests
+  reference these by name via the new `<bg name bg>` tag, OR through the
+  existing `<im name im>` tag — when the PNG isn't found, the matching
+  preset is resolved automatically.
+- **`ProceduralSceneRenderer`** — mounts inside any RectTransform and
+  crossfades between presets. Used behind the picture rect, behind
+  ResultScreen, and behind UnlockModal.
+- **`MainMenuTerminalSkin`** — sci-fi terminal frame for the entire main
+  menu: corner brackets, animated header label, faint grid, scanlines.
+  All code-built, sits at sibling-index 0 under the canvas.
+- **`ChoiceVisualState` glow** — pulsing fringe around hover/active choice
+  cards, color-keyed to mood (danger/reward/story/normal). Code-built
+  rounded-rect sprite, no shaders.
+- **HUD-style parameter cells** — `ParameterAnimator` adds a subtle
+  rounded frame behind every parameter row; when a parameter is near its
+  critical threshold the frame turns red and blinks. Pure code, no assets.
+- **`ProceduralAudio`** — synthesizes short procedural AudioClips at
+  runtime (alarm, click, beep, hiss, sweep, explosion, tada, etc.). Used
+  as a fallback when a quest references an SFX name that's not on disk,
+  so silence isn't dead silence — alarms still beep, ticks still tick.
+
 ### Cinematic core
 - **Typewriter improvements** (`Assets/_Scripts/_View/AliveText.cs`)
   - Skip-to-end on `Enter`, `Space`, or left mouse click.
@@ -188,14 +219,21 @@ Assets/_Scripts/_Settings/
 └── SettingsKeys.cs                — String constants
 
 Assets/_Scripts/_Cinematic/
-├── ChoiceVisualState.cs           — Choice card moods (danger/reward/story/locked)
+├── ChoiceVisualState.cs           — Choice card moods + hover glow
 ├── CinematicEffectsService.cs     — Central FX coordinator
 ├── CinematicTagParser.cs          — Parses <fx ...> tags
 ├── FogLayerMover.cs               — Fog overlay layer
 ├── OverlayFactory.cs              — Atmospheric overlay generators
-├── ParameterAnimator.cs           — Parameter cell pulse animation
+├── ParameterAnimator.cs           — Parameter cell pulse + HUD frame
 ├── ParticleField.cs               — UI particle field (rain/snow/sparks/stars)
-└── PulsingTint.cs                 — Pulsing tint helper
+├── ProceduralAudio.cs             — Generated AudioClips (alarm/beep/hiss/etc.)
+├── PulsingTint.cs                 — Pulsing tint helper
+└── Procedural/
+    ├── BackgroundLayers.cs        — Gradient/Stars/Grid/Glow/Beams/Sparkle/Scanlines layers
+    ├── BackgroundPreset.cs        — Preset struct
+    ├── ProceduralBackgroundPresets.cs — 18 named scene presets + aliases
+    ├── ProceduralSceneRenderer.cs — Crossfade applicator
+    └── ProceduralTextureFactory.cs — Runtime Texture2D / Sprite builders
 
 Assets/_Scripts/_Monetization/
 ├── EntitlementService.cs          — Ownership store
@@ -209,6 +247,7 @@ Assets/_Scripts/_Monetization/
 └── UnlockModal.cs                 — Code-built purchase modal
 
 Assets/_Scripts/_View/
+├── MainMenuTerminalSkin.cs        — Sci-fi terminal frame for main canvas
 ├── ModernSettingsExtension.cs     — Volume + speed + FX toggles
 └── ResultScreen.cs                — Cinematic VICTORY / FAILURE overlay
 

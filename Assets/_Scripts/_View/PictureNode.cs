@@ -142,7 +142,7 @@ public class PictureNode : MonoBehaviour
 
         if (string.IsNullOrEmpty(resolvedPath))
         {
-            Debug.LogWarning($"Image not found. Quest: {questName}, Name: {pictureNameWithoutExtensionOrWithIt}");
+            Debug.Log($"[PictureNode] Image not on disk, procedural background takes over. Quest: {questName}, Name: {pictureNameWithoutExtensionOrWithIt}");
             onLoaded?.Invoke(defaultSprite);
             yield break;
         }
