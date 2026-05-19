@@ -1,0 +1,39 @@
+{
+  "products": [
+    {
+      "id": "pack.neon_descent",
+      "displayName": "Neon Descent Quest Pack",
+      "description": "Unlocks the cinematic showcase quest 'Asteroid Station: Neon Descent' and any future bonus side-stories from the same arc.",
+      "price": "$2.99",
+      "kind": "QuestPack",
+      "grantedQuestNames": ["AsteroidStation_NeonDescent"],
+      "grantedThemeIds": [],
+      "isMockOnly": true,
+      "previewImage": "preview"
+    },
+    {
+      "id": "theme.neon_dark",
+      "displayName": "Neon Dark Theme",
+      "description": "Cosmetic theme — replaces UI accents with cyan/magenta gradient.",
+      "price": "$0.99",
+      "kind": "CosmeticTheme",
+      "grantedQuestNames": [],
+      "grantedThemeIds": ["neon_dark"],
+      "isMockOnly": true,
+      "previewImage": ""
+    },
+    {
+      "id": "pass.supporter",
+      "displayName": "Supporter Pass",
+      "description": "One-time supporter pass — unlocks every current and future quest pack. Recommended for fans of the project.",
+      "price": "$9.99",
+      "kind": "SupporterPass",
+      "grantedQuestNames": ["AsteroidStation_NeonDescent"],
+      "grantedThemeIds": ["neon_dark"],
+      "isMockOnly": true,
+      "previewImage": ""
+    }
+  ],
+  "premiumQuestNames": ["AsteroidStation_NeonDescent"],
+  "featuredQuestNames": ["AsteroidStation_NeonDescent", "SpaceStation_en"]
+}

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TextQuestReader.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,6 +20,8 @@ public class AudioManager : MonoBehaviour
     private Coroutine musicCoroutine;
     private string currentMusicName;
     private float defaultMusicVolume;
+    private float baseMusicVolume;
+    private float baseSfxVolume;
 
     private AudioSource activeMusicSource;
     private AudioSource inactiveMusicSource;
@@ -44,7 +47,9 @@ public class AudioManager : MonoBehaviour
         activeMusicSource = musicSourceA;
         inactiveMusicSource = musicSourceB;
 
-        defaultMusicVolume = musicSourceA.volume;
+        baseMusicVolume = musicSourceA.volume <= 0f ? 0.6f : musicSourceA.volume;
+        baseSfxVolume = sfxSource.volume <= 0f ? 1f : sfxSource.volume;
+        defaultMusicVolume = baseMusicVolume * GameSettings.EffectiveMusicVolume;
 
         musicSourceA.playOnAwake = false;
         musicSourceB.playOnAwake = false;
@@ -55,6 +60,23 @@ public class AudioManager : MonoBehaviour
 
         musicSourceA.volume = 0f;
         musicSourceB.volume = 0f;
+
+        ApplyVolumeSettings();
+        GameSettings.AudioVolumesChanged += ApplyVolumeSettings;
+    }
+
+    private void OnDestroy()
+    {
+        GameSettings.AudioVolumesChanged -= ApplyVolumeSettings;
+    }
+
+    public void ApplyVolumeSettings()
+    {
+        defaultMusicVolume = Mathf.Clamp01(baseMusicVolume * GameSettings.EffectiveMusicVolume);
+        sfxSource.volume = Mathf.Clamp01(baseSfxVolume * GameSettings.EffectiveSfxVolume);
+
+        if (activeMusicSource != null && activeMusicSource.isPlaying)
+            activeMusicSource.volume = defaultMusicVolume;
     }
 
     public void PlayMusic(string musicName, string questName, bool stoppable)
@@ -275,9 +297,19 @@ public class AudioManager : MonoBehaviour
     {
         switch (soundType)
         {
-            case SoundType.Click: sfxSource.PlayOneShot(clickClip); break;
-            case SoundType.Hover: sfxSource.PlayOneShot(hoverClip); break;
+            case SoundType.Click:
+                if (clickClip != null) sfxSource.PlayOneShot(clickClip);
+                break;
+            case SoundType.Hover:
+                if (hoverClip != null) sfxSource.PlayOneShot(hoverClip);
+                break;
         }
+    }
+
+    public void PlaySfxClip(AudioClip clip, float volumeScale = 1f)
+    {
+        if (clip == null) return;
+        sfxSource.PlayOneShot(clip, Mathf.Clamp01(volumeScale));
     }
 
     public void StopSfx()

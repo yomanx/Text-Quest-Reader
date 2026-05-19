@@ -73,7 +73,7 @@ public class TextParser
         }
 
         return result;
-    }      
+    }
 
     public Dictionary<string, int> FillFormulaDict()
     {
@@ -97,5 +97,22 @@ public class TextParser
         }
 
         return value;
+    }
+
+    public List<string> ExtractAllTagValues(ref string text, string tag)
+    {
+        List<string> tags = GetBetween(text, "<" + tag, tag + ">");
+        List<string> values = new List<string>();
+
+        foreach (string fullTag in tags)
+        {
+            text = text.Replace(fullTag, "");
+            string raw = fullTag.Replace("<" + tag, "").Replace(tag + ">", "").Trim();
+
+            if (!string.IsNullOrEmpty(raw))
+                values.Add(raw);
+        }
+
+        return values;
     }
 }

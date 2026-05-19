@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using TextQuestReader.Cinematic;
+using TextQuestReader.Monetization;
+using TextQuestReader.View;
 using UnityEngine;
 
 public class GamePanel : MonoBehaviour
@@ -53,6 +56,9 @@ public class GamePanel : MonoBehaviour
     public event Action RemoteQuestSelectionStarted;
     public event Action RemoteQuestSelectionEnded;
     public event Action StartQuestEnded;
+    public event Action<Location> LocationShown;
+    public event Action<Passage> PassageShown;
+    public event Action<bool> QuestEnded;
 
     public enum Source { Local, Remote }
     public Source CurrentSource { get; private set; }
@@ -80,6 +86,43 @@ public class GamePanel : MonoBehaviour
         passageResolver = new PassageResolver(this, textParser);
         parameterService = new ParameterService(this, textParser, paramsContent, parameterTextPref,
                                                 victoryCell, defeatCell, nextCell, questionsContent);
+
+        EnsureCinematicService();
+        EnsureMonetizationService();
+        EnsureResultScreen();
+    }
+
+    private void EnsureResultScreen()
+    {
+        Canvas hostCanvas = canvas != null ? canvas.GetComponentInParent<Canvas>() : null;
+        if (hostCanvas == null) hostCanvas = FindAnyObjectByType<Canvas>();
+        if (hostCanvas != null)
+            ResultScreen.Bootstrap(this, hostCanvas);
+    }
+
+    private void EnsureCinematicService()
+    {
+        if (CinematicEffectsService.Instance == null)
+        {
+            Canvas hostCanvas = canvas != null ? canvas.GetComponentInParent<Canvas>() : null;
+            if (hostCanvas == null) hostCanvas = FindAnyObjectByType<Canvas>();
+
+            RectTransform shakeRoot = canvas != null ? canvas.GetComponent<RectTransform>() : null;
+            CinematicEffectsService.Bootstrap(hostCanvas, shakeRoot);
+        }
+        else if (canvas != null)
+        {
+            CinematicEffectsService.Instance.SetShakeRoot(canvas);
+        }
+    }
+
+    private void EnsureMonetizationService()
+    {
+        if (MonetizationService.Instance == null)
+        {
+            GameObject go = new GameObject("MonetizationService");
+            go.AddComponent<MonetizationService>();
+        }
     }
 
     private void Start()
@@ -149,8 +192,32 @@ public class GamePanel : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            if (mainText != null && mainText.IsTyping)
+            {
+                mainText.FinishImmediately();
+                return;
+            }
+
             AudioManager.Instance.PlaySfx(SoundType.Click);
             SubmitKeyboardSelection();
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (mainText != null && mainText.IsTyping)
+            {
+                mainText.FinishImmediately();
+                return;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (mainText != null && mainText.IsTyping)
+            {
+                mainText.FinishImmediately();
+            }
         }
     }
 
@@ -186,14 +253,70 @@ public class GamePanel : MonoBehaviour
             return;
         }
 
+        if (!IsQuestAccessAllowed(selectedQuest))
+        {
+            PromptPremiumUnlock(selectedQuest);
+            StartQuestEnded?.Invoke();
+            return;
+        }
+
         isStartingQuest = true;
 
         blockerNode.SetActive(true);
 
-        if (selectedQuestIsRemote)
-            StartRemoteQuest(selectedQuest.Id);
+        System.Action launch = () =>
+        {
+            if (selectedQuestIsRemote)
+                StartRemoteQuest(selectedQuest.Id);
+            else
+                StartLocalQuest(selectedQuest.QuestName);
+        };
+
+        if (CinematicEffectsService.Instance != null)
+            CinematicEffectsService.Instance.FadeOut(0.35f, launch);
         else
-            StartLocalQuest(selectedQuest.QuestName);
+            launch();
+    }
+
+    private bool IsQuestAccessAllowed(QuestShort quest)
+    {
+        if (quest == null) return false;
+        if (MonetizationService.Instance == null) return true;
+        return MonetizationService.Instance.IsQuestUnlocked(quest.QuestName);
+    }
+
+    private void PromptPremiumUnlock(QuestShort quest)
+    {
+        if (quest == null || MonetizationService.Instance == null) return;
+
+        ProductDefinition product = MonetizationService.Instance.FindProductForQuest(quest.QuestName);
+        if (product == null)
+        {
+            Debug.LogWarning($"Premium quest {quest.QuestName} has no product defined in monetization.json — cannot prompt.");
+            return;
+        }
+
+        Canvas hostCanvas = canvas != null ? canvas.GetComponentInParent<Canvas>() : null;
+        if (hostCanvas == null) hostCanvas = FindAnyObjectByType<Canvas>();
+        if (hostCanvas == null) return;
+
+        UnlockModal.Show(hostCanvas, product, confirmed =>
+        {
+            if (!confirmed) return;
+            MonetizationService.Instance.BeginPurchase(product, result =>
+            {
+                if (result.Status == PurchaseStatus.Success || result.Status == PurchaseStatus.AlreadyOwned)
+                {
+                    Debug.Log($"Premium quest unlocked: {quest.QuestName}");
+                    if (CurrentSource == Source.Local) UpdateLocalQuests(quest.QuestName);
+                    else UpdateRemoteQuests(remoteList);
+                }
+                else
+                {
+                    Debug.LogWarning($"Purchase failed: {result.Message}");
+                }
+            });
+        });
     }
 
     public void ActionNext()
@@ -221,6 +344,9 @@ public class GamePanel : MonoBehaviour
 
         SettingsPanel panel = Instantiate(settingsPref, canvas);
         panel.Init(this);
+
+        if (panel.GetComponent<ModernSettingsExtension>() == null)
+            panel.gameObject.AddComponent<ModernSettingsExtension>();
     }
 
     public void ActionCloseBlocker()
@@ -232,6 +358,8 @@ public class GamePanel : MonoBehaviour
 
     public void AbandonQuest()
     {
+        CinematicEffectsService.Instance?.StopAllEffects();
+
         ClearQuestions();
         parameterService.ClearParams();
         pictureNode.ClearPicturesColor();
@@ -267,6 +395,8 @@ public class GamePanel : MonoBehaviour
             parameterService.Demonstrate(passage);
 
         passage.visitCounter++;
+
+        PassageShown?.Invoke(passage);
 
         Location location = player.quest.FindLocationWith(player.locationID);
 
@@ -398,15 +528,31 @@ public class GamePanel : MonoBehaviour
         QuestShort firstQuest = null;
         QuestShort questToSelect = null;
 
-        for (int i = 0; i < quests.Count; i++)
+        QuestCatalogService catalogService = new QuestCatalogService();
+        List<CatalogEntry> entries = catalogService.BuildEntries(quests, isRemote ? QuestSourceKind.Remote : QuestSourceKind.Local);
+
+        for (int i = 0; i < entries.Count; i++)
         {
-            QuestShort quest = quests[i];
+            CatalogEntry entry = entries[i];
+            QuestShort quest = entry.QuestShort;
 
             bool isSelected = !string.IsNullOrEmpty(questNameToSelect) ? quest.QuestName == questNameToSelect : i == 0;
 
             QuestCell cell = Instantiate(questCellPref, questionsContent);
             cell.StartWith(this, quest, isSelected);
             RegisterKeyboardItem(cell);
+
+            if (entry.AccessState != QuestAccessState.FreeOpen || entry.IsFeatured)
+            {
+                PremiumLockOverlay lockOverlay = cell.GetComponent<PremiumLockOverlay>();
+                if (lockOverlay == null) lockOverlay = cell.gameObject.AddComponent<PremiumLockOverlay>();
+                lockOverlay.Setup(quest.QuestName, entry.AccessState, entry.Product, entry.IsFeatured, OnUnlockButtonClicked);
+            }
+            else
+            {
+                PremiumLockOverlay stale = cell.GetComponent<PremiumLockOverlay>();
+                if (stale != null) Destroy(stale);
+            }
 
             if (i == 0)
                 firstQuest = quest;
@@ -430,6 +576,26 @@ public class GamePanel : MonoBehaviour
             pictureNode.InitImages(questToSelect.StartImage, questToSelect.QuestName);
             SelectQuest(questToSelect);
         }
+    }
+
+    private void OnUnlockButtonClicked(ProductDefinition product)
+    {
+        if (product == null) return;
+
+        Canvas hostCanvas = canvas != null ? canvas.GetComponentInParent<Canvas>() : null;
+        if (hostCanvas == null) hostCanvas = FindAnyObjectByType<Canvas>();
+        if (hostCanvas == null) return;
+
+        UnlockModal.Show(hostCanvas, product, confirmed =>
+        {
+            if (!confirmed) return;
+            MonetizationService.Instance.BeginPurchase(product, result =>
+            {
+                string selected = selectedQuest != null ? selectedQuest.QuestName : null;
+                if (CurrentSource == Source.Local) UpdateLocalQuests(selected);
+                else UpdateRemoteQuests(remoteList);
+            });
+        });
     }
 
     #endregion
@@ -462,6 +628,8 @@ public class GamePanel : MonoBehaviour
         LocalizeQuestButtons();
         ShowCurrentLocation();
         EndStartQuestBlock();
+
+        CinematicEffectsService.Instance?.FadeIn(0.55f);
     }
 
     private void StartRemoteQuest(int questId)
@@ -529,6 +697,8 @@ public class GamePanel : MonoBehaviour
                 LocalizeQuestButtons();
 
                 ShowCurrentLocation();
+
+                CinematicEffectsService.Instance?.FadeIn(0.55f);
             }
             catch (Exception ex)
             {
@@ -703,6 +873,7 @@ public class GamePanel : MonoBehaviour
             SelectKeyboardItem(0);
 
             ClearActiveRemoteQuestFolder();
+            QuestEnded?.Invoke(true);
         }
         else if (location.locationType == LocationType.Fail)
         {
@@ -714,6 +885,7 @@ public class GamePanel : MonoBehaviour
             SelectKeyboardItem(0);
 
             ClearActiveRemoteQuestFolder();
+            QuestEnded?.Invoke(false);
         }
         else
         {
@@ -724,6 +896,7 @@ public class GamePanel : MonoBehaviour
         }
 
         location.visitCounter++;
+        LocationShown?.Invoke(location);
     }
 
     private void Final()
@@ -767,8 +940,17 @@ public class GamePanel : MonoBehaviour
             QuestionCell cell = Instantiate(questionCellPref, questionsContent);
             cell.StartWith(this, info.pass, index * 0.15f);
 
-            if (!info.isAllConditions && info.pass.alwaysShow)
+            bool disabled = !info.isAllConditions && info.pass.alwaysShow;
+            if (disabled)
                 cell.DisableButton();
+
+            ChoiceVisualState visualState = cell.GetComponent<ChoiceVisualState>();
+            if (visualState == null) visualState = cell.gameObject.AddComponent<ChoiceVisualState>();
+            ChoiceMood mood = disabled ? ChoiceMood.Locked : ChoiceVisualState.InferFromText(info.pass.question);
+            visualState.SetMood(mood);
+
+            string strippedQuestion = ChoiceVisualState.StripMoodTags(info.pass.question);
+            cell.SetText(textParser.Parse(strippedQuestion));
 
             RegisterKeyboardItem(cell);
         }
@@ -787,6 +969,8 @@ public class GamePanel : MonoBehaviour
         string musicName = textParser.ExtractLastTagValue(ref text, "mu");
         string soundName = textParser.ExtractLastTagValue(ref text, "so");
 
+        List<CinematicTagInfo> cinematicTags = CinematicTagParser.ExtractFromText(ref text, textParser);
+
         if (!string.IsNullOrEmpty(imageName))
             pictureNode.SetNewPicture(imageName, player.quest.questName, mayBeSame: false);
 
@@ -796,6 +980,9 @@ public class GamePanel : MonoBehaviour
             AudioManager.Instance.PlayMusic(player.quest.startMusic, player.quest.questName, stoppable: false);
 
         AudioManager.Instance.PlaySfx(soundName, player.quest.questName);
+
+        if (cinematicTags.Count > 0 && CinematicEffectsService.Instance != null)
+            CinematicEffectsService.Instance.PlayTags(cinematicTags);
 
         mainText.SetText(text);
     }

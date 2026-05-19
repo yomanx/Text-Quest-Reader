@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TextQuestReader.Cinematic;
 using TMPro;
 using UnityEngine;
 using QuestFormula;
@@ -14,6 +15,8 @@ public class ParameterService
     private readonly QuestionCell defeatCell;
     private readonly QuestionCell nextCell;
     private readonly Transform questionsContent;
+
+    private readonly Dictionary<int, int> lastValueByIndex = new Dictionary<int, int>();
 
     public ParameterService(GamePanel gamePanel, TextParser textParser, RectTransform paramsContent, GameObject parameterTextPref,
                             QuestionCell victoryCell, QuestionCell defeatCell, QuestionCell nextCell, Transform questionsContent)
@@ -125,8 +128,22 @@ public class ParameterService
                 output = output.Replace(key, p.value.ToString());
             }
        
-            GameObject cell = UnityEngine.Object.Instantiate(parameterTextPref, paramsContent);            
+            GameObject cell = UnityEngine.Object.Instantiate(parameterTextPref, paramsContent);
             cell.GetComponent<TMP_Text>().text = output;
+
+            ParameterAnimator animator = cell.GetComponent<ParameterAnimator>();
+            if (animator == null) animator = cell.AddComponent<ParameterAnimator>();
+
+            bool wasKnown = lastValueByIndex.TryGetValue(parameter.index, out int prevValue);
+            int delta = wasKnown ? parameter.value - prevValue : 0;
+            bool nearCritical = IsNearCritical(parameter);
+
+            if (!wasKnown)
+                animator.PlayAppear();
+            else if (delta != 0 || nearCritical)
+                animator.PlayChange(delta, nearCritical);
+
+            lastValueByIndex[parameter.index] = parameter.value;
 
             index++;
         }
@@ -136,6 +153,20 @@ public class ParameterService
     {
         foreach (Transform tr in paramsContent)
             GameObject.Destroy(tr.gameObject);
+
+        lastValueByIndex.Clear();
+    }
+
+    private static bool IsNearCritical(Parameter parameter)
+    {
+        if (parameter.paramType == ParamType.Usual) return false;
+
+        int range = Mathf.Max(1, parameter.maxValue - parameter.minValue);
+        int threshold = Mathf.Max(1, range / 5);
+
+        if (parameter.isCriticMax)
+            return parameter.value >= parameter.maxValue - threshold;
+        return parameter.value <= parameter.minValue + threshold;
     }
 
     private void ApplyFormulaInfluence(string formula, Parameter parameter)

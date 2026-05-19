@@ -1,0 +1,1082 @@
+{
+  "ownerUserId": 0,
+  "id": 9001,
+  "questName": "AsteroidStation_NeonDescent",
+  "displayName": "Asteroid Station: Neon Descent",
+  "description": "Cinematic sci-fi survival showcase quest. Wake aboard a derelict mining station around a dying asteroid. Five vital systems are failing, an unknown signal pulses through the hull, and someone left a message just for you.",
+  "startMusic": "ambient_dread",
+  "startImage": "preview",
+  "locationCount": 18,
+  "passageCount": 36,
+  "order": 1,
+  "lang": "en",
+  "author": "Showcase Studio",
+  "parameters": [
+    {
+      "workingName": "Oxygen",
+      "paramType": "Failed",
+      "index": 1,
+      "value": 70,
+      "startValue": 70,
+      "minValue": 0,
+      "maxValue": 100,
+      "isActive": true,
+      "isCriticMax": false,
+      "criticText": "<fx pulse FF2020A0 1.4 3 fx><so alarm so>Your suit reads zero. The station fades. So does the rest.",
+      "critResources": null,
+      "isHidden": false,
+      "paramsRanges": [
+        {"min": 0, "max": 19, "output": "<color=#FF6060>Oxygen: <></color>"},
+        {"min": 20, "max": 49, "output": "<color=#FFCC55>Oxygen: <></color>"},
+        {"min": 50, "max": 100, "output": "<color=#A8E8FF>Oxygen: <></color>"}
+      ]
+    },
+    {
+      "workingName": "Sanity",
+      "paramType": "Failed",
+      "index": 2,
+      "value": 80,
+      "startValue": 80,
+      "minValue": 0,
+      "maxValue": 100,
+      "isActive": true,
+      "isCriticMax": false,
+      "criticText": "<fx glitch 1.2 16 fx><fx tint AA20FFAA 0.6 fx>The voices win. You stop being you.",
+      "critResources": null,
+      "isHidden": false,
+      "paramsRanges": [
+        {"min": 0, "max": 19, "output": "<color=#FF80E0>Sanity: <></color>"},
+        {"min": 20, "max": 49, "output": "<color=#D8A0FF>Sanity: <></color>"},
+        {"min": 50, "max": 100, "output": "<color=#C8C8FF>Sanity: <></color>"}
+      ]
+    },
+    {
+      "workingName": "Power",
+      "paramType": "Usual",
+      "index": 3,
+      "value": 50,
+      "startValue": 50,
+      "minValue": 0,
+      "maxValue": 100,
+      "isActive": true,
+      "isCriticMax": false,
+      "criticText": "",
+      "critResources": null,
+      "isHidden": false,
+      "paramsRanges": [
+        {"min": 0, "max": 14, "output": "<color=#FF8040>Power: <></color>"},
+        {"min": 15, "max": 100, "output": "<color=#FFD060>Power: <></color>"}
+      ]
+    },
+    {
+      "workingName": "Trust",
+      "paramType": "Usual",
+      "index": 4,
+      "value": 20,
+      "startValue": 20,
+      "minValue": 0,
+      "maxValue": 100,
+      "isActive": true,
+      "isCriticMax": false,
+      "criticText": "",
+      "critResources": null,
+      "isHidden": false,
+      "paramsRanges": [
+        {"min": 0, "max": 100, "output": "<color=#80FFB0>Trust: <></color>"}
+      ]
+    },
+    {
+      "workingName": "Signal",
+      "paramType": "Successful",
+      "index": 5,
+      "value": 0,
+      "startValue": 0,
+      "minValue": 0,
+      "maxValue": 10,
+      "isActive": true,
+      "isCriticMax": true,
+      "criticText": "<fx flash A0FFFF 0.7 0.6 fx><fx fade out 0.6 fx>The signal locks. A distant rescue beacon answers. You did it.",
+      "critResources": null,
+      "isHidden": false,
+      "paramsRanges": [
+        {"min": 0, "max": 100, "output": "<color=#7FE0FF>Signal: <></color>"}
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": 1,
+      "locationType": "Start",
+      "descriptions": [
+        "<im cryo_pod im><mu ambient_dread mu><fx fade in 1.2 fx><fx overlay fog on fx>You wake. Frost on the inside of a cryopod. The glass is fogged. Red emergency light pulses in the corridor beyond.\n\nA voice — flat, mechanical — speaks from a panel:\n«Cryo-cycle interrupted. Oxygen reserves at 70 percent. Station integrity: critical. Welcome back, Specialist.»\n\nYour suit boots. Your hands are cold. Five systems blink at you, demanding attention."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 0, "gridY": 0, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 2,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im corridor im><so door_hiss so><fx vignette 000000A0 0.5 fx>The corridor stretches in both directions, lit only by the red pulse. Conduits hang from the ceiling. Vapour leaks from a torn seal.\n\nA panel ahead says HUB. Behind you, AIRLOCK. To your left, a dark side passage with a single word stenciled on it: QUARTERS."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 1, "gridY": 0, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -2, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 3,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im main_hub im><mu ambient_pulse mu><fx overlay scanlines on fx>You step into the Main Hub. A holographic map of the station rotates, half its sections rendered in red. Four working corridors branch out.\n\nA console blinks: «Pick a system. Stabilize it. Then we talk.»\n\nThe voice does not sound like the one in your pod."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 2, "gridY": 0, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -1, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 4,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im bridge im><so console_hum so>The bridge: shattered viewports, asteroid rock visible past the cracked glass. Stars drift in slow rotation. A captain's chair, empty, has a folded handwritten note on it.\n\nThe note reads: «If you read this, you are not alone aboard. Do not trust the system voice. — V.»\n\n<fx shake 0.4 8 fx>Something thuds against the hull. Twice. Then silence."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 3, "gridY": 1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -2, "formula": null},
+        {"influenceType": "Units", "value": -5, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 5, "formula": null},
+        {"influenceType": "Units", "value": 1, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 5,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im medbay im><so heart_monitor so>The MedBay is silent. Six gurneys, six empty. A monitor flatlines at the far end without anyone attached to it.\n\nA medical drone hovers, scanning you. It chirps. A green light turns on. A vial of clear liquid is dispensed into your hand: «Adrenaline. Use with caution.»"
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 3, "gridY": -1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 8, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 6,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im reactor im><mu reactor_hum mu><fx overlay sparks on fx><fx pulse FF4040AA 1.2 2 fx>The reactor core whines like a wounded animal. Coolant lines have ruptured. Heat shimmers off the housing.\n\nA control panel shows three options: vent coolant, force a controlled restart, or seal the room and walk away. None of them look safe."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 3, "gridY": -2, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 7,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im comms im><so radio_static so><fx overlay stars on fx>The Comms Array. A wall of receivers, each tuned to white noise.\n\nA single transmitter waits, its boost amplifier capped at three settings. Each step up costs power, but pushes your distress call further.\n\nThe terminal asks: «How loud do you want to scream?»"
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 3, "gridY": 2, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -1, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 8,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im storage im>Storage hold. Crates labelled in a dozen languages. The air here is cleaner, recycled through a stand-alone scrubber.\n\nYou could rest. Repair. Replenish your oxygen. Or pry open a crate marked CLASSIFIED — RIBBON CLEARANCE ONLY."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 2, "gridY": -1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 9,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im hidden_lab im><fx overlay shimmer on fx><fx tint 4080FF22 0.5 fx>A hidden lab behind the storage crate. Workbenches. Notebooks. Photographs of a woman with the same surname stencilled on the captain's note: V. Lindgren.\n\nA single working terminal blinks: «Operator V. Lindgren — last login eleven days ago. Welcome back, V.»\n\nYou are not V. But the terminal thinks you are."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 1, "gridY": -2, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -1, "formula": null},
+        {"influenceType": "Units", "value": -3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 10, "formula": null},
+        {"influenceType": "Units", "value": 1, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 10,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im server_room im><mu ambient_low mu><fx overlay dust on fx>The server room: rack after rack of stripped-out drives. Whatever ran here has been gutted. Cables hang loose like cut nerves.\n\nOne drive remains, plugged into a maintenance terminal. The screen reads: «Decrypt log V-7?»\n\nIt will take power. It might cost sanity. It might give you the truth."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 2, "gridY": -2, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -1, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 11,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im cargo im>Cargo hold. Heavy mining rigs strapped to the floor, asteroid samples sealed in cases.\n\nOne case is open. The sample inside is gone. The seal looks like it was opened from the inside."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 2, "gridY": 1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -2, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 12,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im observation im><mu ambient_deep mu><fx overlay stars on fx><fx vignette 000020A0 0.7 fx>The observation deck. Open vacuum behind reinforced glass, the asteroid filling half the view. Its surface pulses in slow magenta.\n\nIt should not pulse. Asteroids do not pulse. You watch anyway. The colour matches the rhythm of your own heart, when you check.\n\nSomething down there is listening."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 4, "gridY": 0, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -1, "formula": null},
+        {"influenceType": "Units", "value": -6, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 1, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 13,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im quarters im><so paper_rustle so>Crew quarters. Six bunks, six locker tags. Five have personal things — photographs, a book, a child's drawing. The sixth, marked V. LINDGREN, is empty except for a single recorder.\n\nThe recorder is paused mid-message. You could press play. You might learn what happened."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 1, "gridY": -1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 8, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 14,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im engine_bay im><fx overlay sparks on fx>The engine bay. The drive is offline but warm. Someone — recently — diverted power away from life support and into something else. The trail leads to a sealed conduit headed deeper into the station.\n\nYou could reroute the power. You could leave it. You could follow the trail."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 4, "gridY": -2, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -2, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 15,
+      "locationType": "Neutral",
+      "descriptions": [
+        "<im airlock im><so warning_klaxon so><fx overlay danger on fx><fx pulse FF1010CC 1.6 4 fx>The outer airlock. Pressure-wash burns on the deck. The inner door is intact, but the outer one is sealed with a manual override from the inside.\n\nThe console shows two ghost EVA suits unaccounted for. Whoever closed this door did it knowing they could not come back through."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 5, "gridY": 0, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": -4, "formula": null},
+        {"influenceType": "Units", "value": -4, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 4, "formula": null},
+        {"influenceType": "Units", "value": 1, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 16,
+      "locationType": "Victory",
+      "descriptions": [
+        "<im signal_sent im><mu hopeful_outro mu><fx fade in 1.5 fx><fx overlay stars on fx>Your signal locks. A faint, calm voice answers from the dark:\n\n«Station three-seven-nine, this is Anvil Relay. We have your coordinates. Tether on the way. Hold steady.»\n\nYou sink into the captain's chair. The pulse from the asteroid does not stop, but you do not have to listen to it any more.\n\n<fx flash AAFFFF 0.8 0.5 fx>You survived. You were heard."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 6, "gridY": 1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 10, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 17,
+      "locationType": "Fail",
+      "descriptions": [
+        "<im suffocation im><mu sad_outro mu><fx fade in 1.5 fx><fx tint 200000AA 0.8 fx>Your suit's HUD whites out. The corridors go dark and the dark goes quiet. Your last thought is a regret you cannot name."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 6, "gridY": -1, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    },
+    {
+      "id": 18,
+      "locationType": "Victory",
+      "descriptions": [
+        "<im truth im><mu hopeful_outro mu><fx overlay shimmer on fx><fx fade in 1.4 fx><fx flash A080FF 0.9 0.6 fx>You crack the encrypted log. You read V. Lindgren's last entry: she stayed behind so the asteroid could not follow her crew home.\n\nYou broadcast on her wavelength, with her name attached. The signal locks. Anvil Relay answers. And, far below, the asteroid stops pulsing.\n\nYou survived. You finished what she started. You did not just escape — you understood."
+      ],
+      "chooseWithFormula": false, "formula": "", "gridX": 6, "gridY": 2, "passability": 0,
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 20, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "visitCounter": 0, "firstInPair": []
+    }
+  ],
+  "passages": [
+    {
+      "from": 1, "to": 2, "same": 0, "id": 101,
+      "question": "Step into the corridor.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [
+        {"isOn": false, "min": 0, "max": 0},
+        {"isOn": false, "min": 0, "max": 0},
+        {"isOn": false, "min": 0, "max": 0},
+        {"isOn": false, "min": 0, "max": 0},
+        {"isOn": false, "min": 0, "max": 0}
+      ],
+      "takenValues": [
+        {"nonTaken": false, "formula": ""},
+        {"nonTaken": false, "formula": ""},
+        {"nonTaken": false, "formula": ""},
+        {"nonTaken": false, "formula": ""},
+        {"nonTaken": false, "formula": ""}
+      ],
+      "multipleValues": [
+        {"nonMultiple": false, "formula": ""},
+        {"nonMultiple": false, "formula": ""},
+        {"nonMultiple": false, "formula": ""},
+        {"nonMultiple": false, "formula": ""},
+        {"nonMultiple": false, "formula": ""}
+      ],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 2, "to": 3, "same": 0, "id": 102,
+      "question": "Walk to the Main Hub.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 2, "to": 13, "same": 0, "id": 103,
+      "question": "[story] Slip into the dark side passage to Quarters.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": -1, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 3, "to": 4, "same": 0, "id": 104,
+      "question": "[story] Head for the Bridge.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 3, "to": 5, "same": 0, "id": 105,
+      "question": "[reward] Drop into MedBay for supplies.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 3, "to": 6, "same": 0, "id": 106,
+      "question": "[danger] Push to the Reactor Room.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 2, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 3, "to": 7, "same": 0, "id": 107,
+      "question": "Head straight for the Comms Array.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 3, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 3, "to": 8, "same": 0, "id": 108,
+      "question": "Search Storage for resources.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 4, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 4, "to": 3, "same": 0, "id": 109,
+      "question": "Return to the Main Hub.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 5, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 4, "to": 12, "same": 0, "id": 110,
+      "question": "[story] Follow the corridor to the Observation Deck.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 5, "to": 3, "same": 0, "id": 111,
+      "question": "[reward] Take the adrenaline shot. Steady your nerves.",
+      "description": "<fx flash A8FFA8 0.3 0.4 fx><so med_inject so>You inject. The room snaps into focus. Your hands stop shaking.",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 15, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 5, "to": 3, "same": 0, "id": 112,
+      "question": "Leave the vial. You don't trust mystery chemicals.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 6, "to": 3, "same": 0, "id": 113,
+      "question": "[danger] Vent coolant. Risky — but quick.",
+      "description": "<fx shake 0.55 22 fx><fx flash FF6020 0.4 0.6 fx><so explosion_small so>You vent. Steam screams through the bay. The reactor cools.",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": -8, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 25, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 6, "to": 3, "same": 0, "id": 114,
+      "question": "Force a controlled restart.",
+      "description": "",
+      "logicalCondition": "p3 >= 30", "priority": 1.0, "displayOrder": 1, "alwaysShow": true, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 35, "formula": null},
+        {"influenceType": "Units", "value": 3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 6, "to": 3, "same": 0, "id": 115,
+      "question": "Seal the reactor. Walk away.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 2, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -5, "formula": null},
+        {"influenceType": "Units", "value": -15, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 7, "to": 16, "same": 0, "id": 116,
+      "question": "[reward] Max amplifier. Send everything you have.",
+      "description": "",
+      "logicalCondition": "p3 >= 40 && p5 >= 3", "priority": 1.0, "displayOrder": 0, "alwaysShow": true, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -40, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 10, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 7, "to": 3, "same": 0, "id": 117,
+      "question": "Medium boost. Conserve power.",
+      "description": "",
+      "logicalCondition": "p3 >= 15", "priority": 1.0, "displayOrder": 1, "alwaysShow": true, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -15, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 2, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 7, "to": 3, "same": 0, "id": 118,
+      "question": "Low boost. Hope someone is close.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 2, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -5, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 1, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 8, "to": 3, "same": 0, "id": 119,
+      "question": "[reward] Rest by the scrubber. Recover oxygen.",
+      "description": "<fx fade in 0.4 fx>You breathe slow, deep. Your suit refills.",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 25, "formula": null},
+        {"influenceType": "Units", "value": 5, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 8, "to": 9, "same": 0, "id": 120,
+      "question": "[story] Pry open the classified crate.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 8, "to": 11, "same": 0, "id": 121,
+      "question": "Continue to the Cargo Hold.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 2, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 9, "to": 10, "same": 0, "id": 122,
+      "question": "[story] Move into the Server Room.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 9, "to": 3, "same": 0, "id": 123,
+      "question": "Close it. Some doors should stay shut.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -3, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 10, "to": 18, "same": 0, "id": 124,
+      "question": "[reward] Decrypt log V-7. Spend the power. Learn the truth.",
+      "description": "",
+      "logicalCondition": "p3 >= 25 && p4 >= 25 && p5 >= 4", "priority": 1.0, "displayOrder": 0, "alwaysShow": true, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": -5, "formula": null},
+        {"influenceType": "Units", "value": -5, "formula": null},
+        {"influenceType": "Units", "value": -25, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 10, "to": 3, "same": 0, "id": 125,
+      "question": "Leave the encrypted log. Not worth the cost.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 11, "to": 14, "same": 0, "id": 126,
+      "question": "[danger] Push to the Engine Bay.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 11, "to": 3, "same": 0, "id": 127,
+      "question": "Back away from the open case.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 2, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 12, "to": 3, "same": 0, "id": 128,
+      "question": "[danger] Stare back. Match the rhythm.",
+      "description": "<fx glitch 0.6 14 fx><fx tint A040FFAA 0.5 fx>You hold the rhythm in your chest. Something out there nods.",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -10, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 2, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 12, "to": 3, "same": 0, "id": 129,
+      "question": "Look away. Whatever it is, you owe it nothing.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 6, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 13, "to": 3, "same": 0, "id": 130,
+      "question": "[story] Play V. Lindgren's recorder.",
+      "description": "<so soft_static so><fx vignette 000020A0 0.6 fx>«If anyone wakes from cryo before relay confirms, do not — repeat, do not — open the asteroid sample. I am sealing the bay. I am sorry.»",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -4, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 15, "formula": null},
+        {"influenceType": "Units", "value": 1, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 13, "to": 3, "same": 0, "id": 131,
+      "question": "Leave the recorder. Stay focused on the present.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 14, "to": 15, "same": 0, "id": 132,
+      "question": "[danger] Follow the diverted power trail to the Airlock.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 0, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 14, "to": 3, "same": 0, "id": 133,
+      "question": "[reward] Reroute the power back to life support.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 20, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 20, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 15, "to": 16, "same": 0, "id": 134,
+      "question": "[reward] Use V. Lindgren's emergency frequency from the airlock.",
+      "description": "",
+      "logicalCondition": "p4 >= 25 && p5 >= 2", "priority": 1.0, "displayOrder": 0, "alwaysShow": true, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": -10, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 5, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 15, "to": 17, "same": 0, "id": 135,
+      "question": "[danger] Open the outer door. Walk out.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 1, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": -80, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    },
+    {
+      "from": 15, "to": 3, "same": 0, "id": 136,
+      "question": "Step back. Return to the Hub.",
+      "description": "",
+      "logicalCondition": "", "priority": 1.0, "displayOrder": 2, "alwaysShow": false, "ignoreDemonstration": false,
+      "necessaryRanges": [{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0},{"isOn": false, "min": 0, "max": 0}],
+      "takenValues": [{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""},{"nonTaken": false, "formula": ""}],
+      "multipleValues": [{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""},{"nonMultiple": false, "formula": ""}],
+      "influences": [
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null},
+        {"influenceType": "Units", "value": 0, "formula": null}
+      ],
+      "paramsActions": ["Ignore", "Ignore", "Ignore", "Ignore", "Ignore"],
+      "passability": 0, "visitCounter": 0
+    }
+  ]
+}
