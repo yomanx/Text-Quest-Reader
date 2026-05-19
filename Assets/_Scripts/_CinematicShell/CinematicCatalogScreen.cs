@@ -375,7 +375,9 @@ namespace TextQuestReader.CinematicShell
             heroDescription.fontSize = 16f;
             heroDescription.color = new Color(0.85f, 0.92f, 1f, 0.95f);
             heroDescription.alignment = TextAlignmentOptions.TopLeft;
-            heroDescription.textWrappingMode = TextWrappingModes.Normal;
+#pragma warning disable CS0618
+            heroDescription.enableWordWrapping = true;
+#pragma warning restore CS0618
             heroDescription.raycastTarget = false;
 
             GameObject priceGo = new GameObject("Price", typeof(RectTransform));

@@ -270,7 +270,9 @@ namespace TextQuestReader.CinematicShell
             mainText.fontSize = 22f;
             mainText.color = new Color(0.95f, 0.96f, 1f, 1f);
             mainText.alignment = TextAlignmentOptions.TopLeft;
-            mainText.textWrappingMode = TextWrappingModes.Normal;
+#pragma warning disable CS0618
+            mainText.enableWordWrapping = true;
+#pragma warning restore CS0618
             mainText.lineSpacing = 6f;
             mainText.text = "";
             mainText.raycastTarget = false;
@@ -326,7 +328,7 @@ namespace TextQuestReader.CinematicShell
             holoLabel.text = "// HOLO MONITOR · SECTOR FEED //";
             holoLabel.fontSize = 11f;
             holoLabel.color = new Color(0.30f, 0.85f, 1f, 0.85f);
-            holoLabel.alignment = TextAlignmentOptions.MidlineCenter;
+            holoLabel.alignment = TextAlignmentOptions.Center;
             holoLabel.fontStyle = FontStyles.Bold;
             holoLabel.characterSpacing = 4f;
             holoLabel.raycastTarget = false;

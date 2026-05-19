@@ -146,7 +146,9 @@ namespace TextQuestReader.CinematicShell
             label.fontStyle = FontStyles.Normal;
             label.color = disabled ? new Color(0.55f, 0.55f, 0.65f, 0.85f) : new Color(0.95f, 0.96f, 1f, 1f);
             label.alignment = TextAlignmentOptions.TopLeft;
-            label.textWrappingMode = TextWrappingModes.Normal;
+#pragma warning disable CS0618
+            label.enableWordWrapping = true;
+#pragma warning restore CS0618
             label.raycastTarget = false;
         }
 
