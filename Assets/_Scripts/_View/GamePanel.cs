@@ -50,6 +50,10 @@ public class GamePanel : MonoBehaviour
     private PassageResolver passageResolver;
     private ParameterService parameterService;
 
+    public LocationDescriptionResolver LocationDescriptionResolver => locationDescriptionResolver;
+    public PassageResolver PassageResolver => passageResolver;
+    public ParameterService ParameterService => parameterService;
+
     private QuestShort selectedQuest;
     private bool selectedQuestIsRemote;
 
@@ -60,6 +64,11 @@ public class GamePanel : MonoBehaviour
     public event Action<Location> LocationShown;
     public event Action<Passage> PassageShown;
     public event Action<bool> QuestEnded;
+    public event Action<string> MainTextRendered;
+    public event Action<List<PassageInfo>> ChoicesReady;
+    public event Action<Passage> SinglePassageReady;
+    public event Action<List<TextQuestReader.Monetization.CatalogEntry>, Source, string> CatalogReady;
+    public event Action<QuestShort, bool> QuestPreviewSelected;
 
     public enum Source { Local, Remote }
     public Source CurrentSource { get; private set; }
@@ -448,6 +457,8 @@ public class GamePanel : MonoBehaviour
 
             singlePassage = next;
 
+            SinglePassageReady?.Invoke(next);
+
             nextCell.StartAsNext(this);
             nextCell.gameObject.SetActive(true);
 
@@ -455,6 +466,23 @@ public class GamePanel : MonoBehaviour
             SelectKeyboardItem(0);
         }
     }
+
+    public void TriggerPassageById(int passageId)
+    {
+        if (player == null || player.gameOver) return;
+        Passage passage = player.quest.FindPassageWith(passageId);
+        if (passage == null) return;
+        player.locationID = passage.to;
+        player.passageID = passage.id;
+        ShowPassage(passage);
+    }
+
+    public void TriggerNextSinglePassage()
+    {
+        ActionNext();
+    }
+
+    public bool HasActivePlayer => player != null;
 
     public void DiselectAllQuestCells()
     {
@@ -486,6 +514,8 @@ public class GamePanel : MonoBehaviour
         mainText.SetText($"<b>{title}</b>\n\n{questShort.Description}");
         pictureNode.SetNewPicture(questShort.StartImage, questShort.QuestName, mayBeSame: true);
         AudioManager.Instance.PlayMusic(questShort.StartMusic, questShort.QuestName, stoppable: true);
+
+        QuestPreviewSelected?.Invoke(questShort, false);
 
         if (proceduralBackground != null)
         {
@@ -574,6 +604,8 @@ public class GamePanel : MonoBehaviour
 
         QuestCatalogService catalogService = new QuestCatalogService();
         List<CatalogEntry> entries = catalogService.BuildEntries(quests, isRemote ? QuestSourceKind.Remote : QuestSourceKind.Local);
+
+        CatalogReady?.Invoke(entries, isRemote ? Source.Remote : Source.Local, questNameToSelect);
 
         for (int i = 0; i < entries.Count; i++)
         {
@@ -975,6 +1007,8 @@ public class GamePanel : MonoBehaviour
         singlePassage = null;
         nextCell.gameObject.SetActive(false);
 
+        ChoicesReady?.Invoke(visiblePassages);
+
         const float interval = 120f;
 
         for (int index = 0; index < visiblePassages.Count; index++)
@@ -1034,6 +1068,7 @@ public class GamePanel : MonoBehaviour
             CinematicEffectsService.Instance.PlayTags(cinematicTags);
 
         mainText.SetText(text);
+        MainTextRendered?.Invoke(text);
     }
 
     private void ClearQuestions()
