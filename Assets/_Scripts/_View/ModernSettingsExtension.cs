@@ -24,6 +24,10 @@ namespace TextQuestReader.View
         private Toggle fadeToggle;
         private Toggle typewriterSfxToggle;
 
+        // Live read-out next to the text-speed slider so the user can see
+        // whether they're at 0.5x / 1x / 2x without guessing from the knob.
+        private TextMeshProUGUI textSpeedValueLabel;
+
         private void Start()
         {
             BuildIfNeeded();
@@ -56,8 +60,20 @@ namespace TextQuestReader.View
             sfxSlider = CreateSlider(new Vector2(0.32f, 0.56f), new Vector2(0.98f, 0.66f), GameSettings.SfxVolume, v => GameSettings.SfxVolume = v);
 
             CreateLabel("Text Speed", new Vector2(0.02f, 0.40f), new Vector2(0.30f, 0.55f));
-            textSpeedSlider = CreateSlider(new Vector2(0.32f, 0.41f), new Vector2(0.98f, 0.51f), Mathf.InverseLerp(GameSettings.MinTextSpeed, GameSettings.MaxTextSpeed, GameSettings.TextSpeed),
-                v => GameSettings.TextSpeed = Mathf.Lerp(GameSettings.MinTextSpeed, GameSettings.MaxTextSpeed, v));
+            textSpeedSlider = CreateSlider(new Vector2(0.32f, 0.41f), new Vector2(0.88f, 0.51f), Mathf.InverseLerp(GameSettings.MinTextSpeed, GameSettings.MaxTextSpeed, GameSettings.TextSpeed),
+                v =>
+                {
+                    GameSettings.TextSpeed = Mathf.Lerp(GameSettings.MinTextSpeed, GameSettings.MaxTextSpeed, v);
+                    UpdateTextSpeedValueLabel();
+                });
+
+            // Live "1.0x" / "2.5x" read-out — slider was at 0.32..0.98 width
+            // before; trimmed to 0.32..0.88 so the value label fits to the
+            // right at 0.89..0.98 without overlapping the knob.
+            textSpeedValueLabel = CreateLabel("1.0x", new Vector2(0.89f, 0.40f), new Vector2(0.98f, 0.55f));
+            textSpeedValueLabel.alignment = TextAlignmentOptions.Right;
+            textSpeedValueLabel.fontStyle = FontStyles.Bold;
+            UpdateTextSpeedValueLabel();
 
             CreateLabel("Screen Effects", new Vector2(0.02f, 0.25f), new Vector2(0.30f, 0.40f));
             effectsToggle = CreateToggle(new Vector2(0.32f, 0.26f), new Vector2(0.55f, 0.36f), GameSettings.ScreenEffectsEnabled, v => GameSettings.ScreenEffectsEnabled = v);
@@ -82,6 +98,15 @@ namespace TextQuestReader.View
             if (shakeToggle != null) shakeToggle.SetIsOnWithoutNotify(GameSettings.ScreenShakeEnabled);
             if (fadeToggle != null) fadeToggle.SetIsOnWithoutNotify(GameSettings.SceneFadeEnabled);
             if (typewriterSfxToggle != null) typewriterSfxToggle.SetIsOnWithoutNotify(GameSettings.TypewriterSfxEnabled);
+            UpdateTextSpeedValueLabel();
+        }
+
+        private void UpdateTextSpeedValueLabel()
+        {
+            if (textSpeedValueLabel == null) return;
+            float v = GameSettings.TextSpeed;
+            // Format: 0.25x .. 4.0x with one decimal place.
+            textSpeedValueLabel.text = v.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "x";
         }
 
         private TextMeshProUGUI CreateLabel(string text, Vector2 anchorMin, Vector2 anchorMax)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TextQuestReader.Settings;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(TMP_Text))]
@@ -21,6 +22,7 @@ public class AliveText : MonoBehaviour
     [SerializeField] private AudioClip typewriterClip;
     [SerializeField, Range(0f, 1f)] private float typewriterClipVolume = 0.15f;
     [SerializeField] private int sfxEveryNChars = 2;
+    [SerializeField] private bool showSkipAffordance = true;
 
     private bool isTyping;
     private bool finishRequested;
@@ -31,6 +33,12 @@ public class AliveText : MonoBehaviour
 
     public bool IsTyping => isTyping;
     public string CurrentValue => currentValue;
+
+    // Runtime "tap / space / click to skip" hint. Lazily built as a child of
+    // this component's GameObject; pinned to the bottom-right corner with
+    // LayoutElement.ignoreLayout so parent layout groups don't account for it.
+    private TextMeshProUGUI skipAffordanceLabel;
+    private Coroutine affordanceRoutine;
 
     private void Awake()
     {
@@ -67,6 +75,7 @@ public class AliveText : MonoBehaviour
         currentValue = string.Empty;
         text.text = string.Empty;
         text.maxVisibleCharacters = 0;
+        HideAffordance();
     }
 
     private IEnumerator ShowText(string value)
@@ -75,6 +84,7 @@ public class AliveText : MonoBehaviour
         {
             text.text = string.Empty;
             text.maxVisibleCharacters = 0;
+            HideAffordance();
             yield break;
         }
 
@@ -84,11 +94,21 @@ public class AliveText : MonoBehaviour
         text.text = value;
         text.maxVisibleCharacters = 0;
 
-        float charsPerSecond = GetCharsPerSecond(value.Length) * Mathf.Clamp(GameSettings.TextSpeed, GameSettings.MinTextSpeed, GameSettings.MaxTextSpeed);
+        float speed = Mathf.Clamp(GameSettings.TextSpeed, GameSettings.MinTextSpeed, GameSettings.MaxTextSpeed);
+        float charsPerSecond = GetCharsPerSecond(value.Length) * speed;
+
+        // Punctuation-aware pauses, scaled inversely to the user's text speed:
+        // a fast reader gets micro-pauses, a slow reader gets real beats.
+        float pauseAfterSentence = 0.30f / Mathf.Max(speed, 0.25f);
+        float pauseAfterClause   = 0.12f / Mathf.Max(speed, 0.25f);
+
+        ShowAffordance();
 
         float timer = 0f;
+        float pendingPause = 0f;
         int charIndex = 0;
         int lastSfxIndex = 0;
+        int prevCharIndex = 0;
 
         while (charIndex < value.Length)
         {
@@ -98,18 +118,43 @@ public class AliveText : MonoBehaviour
                 break;
             }
 
-            timer += Time.deltaTime;
+            // Honour any punctuation-driven pause without stalling Update or
+            // adding a non-cancellable WaitForSeconds.
+            if (pendingPause > 0f)
+            {
+                pendingPause -= Time.deltaTime;
+                yield return null;
+                continue;
+            }
 
+            timer += Time.deltaTime;
             int charsToShow = Mathf.FloorToInt(timer * charsPerSecond);
 
             if (charsToShow > 0)
             {
                 timer -= charsToShow / charsPerSecond;
-
-                charIndex += charsToShow;
-                charIndex = Mathf.Min(charIndex, value.Length);
+                prevCharIndex = charIndex;
+                charIndex = Mathf.Min(value.Length, charIndex + charsToShow);
 
                 text.maxVisibleCharacters = charIndex;
+
+                // Look at the characters we just revealed (prevCharIndex..charIndex).
+                // The strongest punctuation in that span wins.
+                float pauseSet = 0f;
+                for (int i = prevCharIndex; i < charIndex; i++)
+                {
+                    char c = value[i];
+                    if (c == '.' || c == '!' || c == '?')
+                    {
+                        pauseSet = Mathf.Max(pauseSet, pauseAfterSentence);
+                    }
+                    else if (c == ',' || c == ';' || c == ':' || c == '—' || c == '–')
+                    {
+                        pauseSet = Mathf.Max(pauseSet, pauseAfterClause);
+                    }
+                }
+                if (pauseSet > 0f && charIndex < value.Length)
+                    pendingPause = pauseSet;
 
                 if (emitTypewriterSfx && GameSettings.TypewriterSfxEnabled && typewriterClip != null && AudioManager.Instance != null)
                 {
@@ -127,6 +172,9 @@ public class AliveText : MonoBehaviour
         text.maxVisibleCharacters = value.Length;
         finishRequested = false;
         isTyping = false;
+        HideAffordance();
+        // TypingFinished fires exactly once per ShowText invocation, both on
+        // natural completion and on skip-to-end.
         TypingFinished?.Invoke();
     }
 
@@ -134,5 +182,88 @@ public class AliveText : MonoBehaviour
     {
         float t = Mathf.InverseLerp(shortTextLength, longTextLength, textLength);
         return Mathf.Lerp(minCharsPerSecond, maxCharsPerSecond, t);
+    }
+
+    private void EnsureAffordance()
+    {
+        if (!showSkipAffordance) return;
+        if (skipAffordanceLabel != null) return;
+
+        GameObject go = new GameObject("SkipAffordance", typeof(RectTransform), typeof(LayoutElement));
+        go.transform.SetParent(transform, false);
+
+        LayoutElement le = go.GetComponent<LayoutElement>();
+        le.ignoreLayout = true;   // parent VerticalLayoutGroup / SizeFitter won't account for it
+
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchorMin = new Vector2(1f, 0f);
+        rt.anchorMax = new Vector2(1f, 0f);
+        rt.pivot = new Vector2(1f, 0f);
+        rt.anchoredPosition = new Vector2(-4f, 6f);
+        rt.sizeDelta = new Vector2(160f, 18f);
+
+        skipAffordanceLabel = go.AddComponent<TextMeshProUGUI>();
+        skipAffordanceLabel.text = "▸  Space / Enter to skip";
+        skipAffordanceLabel.fontSize = 11f;
+        skipAffordanceLabel.alignment = TextAlignmentOptions.MidlineRight;
+        skipAffordanceLabel.color = new Color(0.55f, 0.80f, 0.95f, 0f);
+        skipAffordanceLabel.characterSpacing = 3f;
+        skipAffordanceLabel.raycastTarget = false;
+    }
+
+    private void ShowAffordance()
+    {
+        EnsureAffordance();
+        if (skipAffordanceLabel == null) return;
+        if (affordanceRoutine != null) StopCoroutine(affordanceRoutine);
+        affordanceRoutine = StartCoroutine(AffordanceBreathe());
+    }
+
+    private void HideAffordance()
+    {
+        if (skipAffordanceLabel == null) return;
+        if (affordanceRoutine != null) StopCoroutine(affordanceRoutine);
+        affordanceRoutine = StartCoroutine(AffordanceFadeOut());
+    }
+
+    private IEnumerator AffordanceBreathe()
+    {
+        // 0.45s fade-in delay so a tiny one-line text doesn't blip the hint;
+        // it only shows up if the typewriter has been running long enough
+        // that "you may skip" is actually useful information.
+        float t = 0f;
+        while (t < 0.45f)
+        {
+            t += Time.deltaTime;
+            if (!isTyping) yield break;
+            yield return null;
+        }
+
+        Color baseColor = skipAffordanceLabel.color;
+        float phase = 0f;
+        while (isTyping)
+        {
+            phase += Time.deltaTime * 2.2f;
+            float a = 0.55f + 0.20f * Mathf.Sin(phase);
+            skipAffordanceLabel.color = new Color(baseColor.r, baseColor.g, baseColor.b, a);
+            yield return null;
+        }
+    }
+
+    private IEnumerator AffordanceFadeOut()
+    {
+        Color baseColor = skipAffordanceLabel.color;
+        float startAlpha = baseColor.a;
+        float t = 0f;
+        const float dur = 0.25f;
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / dur);
+            skipAffordanceLabel.color = new Color(baseColor.r, baseColor.g, baseColor.b, Mathf.Lerp(startAlpha, 0f, k));
+            yield return null;
+        }
+        skipAffordanceLabel.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0f);
+        affordanceRoutine = null;
     }
 }
