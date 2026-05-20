@@ -38,6 +38,8 @@ namespace TextQuestReader.Cinematic
 
         public bool IsFading { get; private set; }
 
+        private RectTransform scopedTarget;
+
         public static CinematicEffectsService Bootstrap(Canvas canvas, RectTransform shakeRoot = null)
         {
             if (Instance != null)
@@ -50,6 +52,34 @@ namespace TextQuestReader.Cinematic
             CinematicEffectsService svc = go.AddComponent<CinematicEffectsService>();
             svc.hostCanvas = canvas;
             svc.shakeRoot = shakeRoot;
+            svc.scopedTarget = null;
+            svc.EnsureUiBuilt();
+            return svc;
+        }
+
+        /// <summary>
+        /// Bootstrap a scoped variant: all overlay surfaces (fade/flash/
+        /// vignette/tint/pulse/glitch) are drawn INSIDE the given target
+        /// RectTransform instead of the whole canvas. Shake is applied to
+        /// that target too. Use this to keep cinematic FX inside the quest's
+        /// picture window so they never cover the catalog/text/choices.
+        /// </summary>
+        public static CinematicEffectsService BootstrapScoped(RectTransform target)
+        {
+            if (Instance != null)
+                return Instance;
+
+            if (target == null)
+            {
+                Debug.LogWarning("[CinematicEffectsService] BootstrapScoped called without a target — falling back to no-op.");
+                return null;
+            }
+
+            GameObject go = new GameObject("CinematicEffectsService");
+            CinematicEffectsService svc = go.AddComponent<CinematicEffectsService>();
+            svc.scopedTarget = target;
+            svc.shakeRoot = target;
+            svc.hostCanvas = target.GetComponentInParent<Canvas>();
             svc.EnsureUiBuilt();
             return svc;
         }
@@ -68,26 +98,34 @@ namespace TextQuestReader.Cinematic
 
         private void EnsureUiBuilt()
         {
-            if (hostCanvas == null)
+            Transform parentForOverlays;
+
+            if (scopedTarget != null)
             {
-                Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
-                foreach (Canvas c in canvases)
+                parentForOverlays = scopedTarget;
+            }
+            else
+            {
+                if (hostCanvas == null)
                 {
-                    if (c.renderMode == RenderMode.ScreenSpaceOverlay || c.renderMode == RenderMode.ScreenSpaceCamera)
+                    Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
+                    foreach (Canvas c in canvases)
                     {
-                        hostCanvas = c;
-                        break;
+                        if (c.renderMode == RenderMode.ScreenSpaceOverlay || c.renderMode == RenderMode.ScreenSpaceCamera)
+                        {
+                            hostCanvas = c;
+                            break;
+                        }
                     }
                 }
+                if (hostCanvas == null) return;
+                parentForOverlays = hostCanvas.transform;
             }
-
-            if (hostCanvas == null)
-                return;
 
             if (overlayHostRect == null)
             {
                 GameObject host = new GameObject("CinematicOverlays", typeof(RectTransform));
-                host.transform.SetParent(hostCanvas.transform, false);
+                host.transform.SetParent(parentForOverlays, false);
                 overlayHostRect = (RectTransform)host.transform;
                 overlayHostRect.anchorMin = Vector2.zero;
                 overlayHostRect.anchorMax = Vector2.one;

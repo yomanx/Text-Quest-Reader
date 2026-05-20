@@ -135,17 +135,22 @@ public class GamePanel : MonoBehaviour
 
     private void EnsureCinematicService()
     {
-        if (CinematicEffectsService.Instance == null)
+        if (CinematicEffectsService.Instance != null) return;
+
+        // Scope all cinematic FX (flash/shake/vignette/tint/pulse/glitch/fade/
+        // overlay) to the picture window so they never cover the catalog
+        // list, the text panel or the choice buttons. Falls back to the full
+        // canvas if mainPictureRect isn't available for some reason.
+        if (mainPictureRect != null)
+        {
+            CinematicEffectsService.BootstrapScoped(mainPictureRect);
+        }
+        else
         {
             Canvas hostCanvas = canvas != null ? canvas.GetComponentInParent<Canvas>() : null;
             if (hostCanvas == null) hostCanvas = FindAnyObjectByType<Canvas>();
-
             RectTransform shakeRoot = canvas != null ? canvas.GetComponent<RectTransform>() : null;
             CinematicEffectsService.Bootstrap(hostCanvas, shakeRoot);
-        }
-        else if (canvas != null)
-        {
-            CinematicEffectsService.Instance.SetShakeRoot(canvas);
         }
     }
 
