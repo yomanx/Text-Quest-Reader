@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TextQuestReader.Cinematic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +19,17 @@ public class QuestionCell : MonoBehaviour, IKeyboardSelectable
 
     private bool isNextButton;
 
-    private Vector2 hoverSize = new Vector2(1.01f, 1.01f);
+    // Slightly stronger hover lift than the source 1.01 — readable change
+    // at any font size, still subtle enough not to clip layout neighbours.
+    private Vector2 hoverSize = new Vector2(1.02f, 1.02f);
     private Vector2 normalSize = new Vector2(1f, 1f);
+
+    // Cached enhancer (added at runtime by GamePanel.ShowLocationPassages).
+    // Tells ChoiceVisualState when the button is hovered / keyboard-selected
+    // so it can brighten its accent bar and glow fringe.
+    private ChoiceVisualState visualState;
+    private ChoiceVisualState VisualState =>
+        visualState != null ? visualState : (visualState = GetComponent<ChoiceVisualState>());
 
     public bool IsKeyboardSelectable => gameObject.activeInHierarchy && button != null && button.enabled;
 
@@ -86,13 +96,18 @@ public class QuestionCell : MonoBehaviour, IKeyboardSelectable
     public void DisableButton()
     {
         button.enabled = false;
-        questionText.Text.color = Color.gray;
+        // Clearer disabled state: noticeably muted but still legible,
+        // and slightly bluish-grey instead of flat grey so it reads as
+        // "inactive choice" rather than "broken text".
+        questionText.Text.color = new Color(0.55f, 0.58f, 0.65f, 0.65f);
+        VisualState?.SetMood(ChoiceMood.Locked);
     }
 
     public void SetKeyboardSelected(bool selected)
     {
         selectedImage.SetActive(selected);
         transform.localScale = selected ? hoverSize : normalSize;
+        VisualState?.SetHoverState(selected);
     }
 
     public void SubmitKeyboard()
@@ -106,6 +121,7 @@ public class QuestionCell : MonoBehaviour, IKeyboardSelectable
         {
             selectedImage.SetActive(true);
             transform.localScale = hoverSize;
+            VisualState?.SetHoverState(true);
 
             if (ignoreFirstHover)
                 return;
@@ -120,6 +136,7 @@ public class QuestionCell : MonoBehaviour, IKeyboardSelectable
             selectedImage.SetActive(false);
 
         transform.localScale = normalSize;
+        VisualState?.SetHoverState(false);
     }
 
     public void StartAsNext(GamePanel gamePanel)

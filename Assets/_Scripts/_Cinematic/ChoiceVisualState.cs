@@ -26,12 +26,22 @@ namespace TextQuestReader.Cinematic
         private Image glowFringe;
         private float glowPhase;
         private ChoiceMood mood = ChoiceMood.Normal;
+        private bool isHovered;
 
-        private static readonly Color NormalColor = new Color(0.45f, 0.55f, 0.75f, 1f);
-        private static readonly Color DangerColor = new Color(0.85f, 0.25f, 0.25f, 1f);
-        private static readonly Color RewardColor = new Color(0.95f, 0.78f, 0.30f, 1f);
-        private static readonly Color StoryColor = new Color(0.55f, 0.45f, 0.85f, 1f);
-        private static readonly Color LockedColor = new Color(0.55f, 0.55f, 0.55f, 1f);
+        // Palette tuned for the polish pass:
+        //   Normal -> cyan-blue, slightly more saturated than the source so
+        //             the bar reads as "active interactive control".
+        //   Danger -> warm red (slightly less crimson, more orange-warm so
+        //             it doesn't fight with the reactor scenes).
+        //   Reward -> warm gold (unchanged — already strong).
+        //   Story  -> calmer violet (lowered saturation so it doesn't compete
+        //             with Danger when shown side-by-side).
+        //   Locked -> low-contrast slate so the disabled state is obvious.
+        private static readonly Color NormalColor = new Color(0.40f, 0.78f, 0.98f, 1f);
+        private static readonly Color DangerColor = new Color(0.95f, 0.40f, 0.30f, 1f);
+        private static readonly Color RewardColor = new Color(0.97f, 0.80f, 0.32f, 1f);
+        private static readonly Color StoryColor = new Color(0.62f, 0.50f, 0.92f, 1f);
+        private static readonly Color LockedColor = new Color(0.40f, 0.43f, 0.50f, 1f);
 
         public ChoiceMood Mood => mood;
 
@@ -49,8 +59,13 @@ namespace TextQuestReader.Cinematic
                 rt.anchorMin = new Vector2(0f, 0f);
                 rt.anchorMax = new Vector2(0f, 1f);
                 rt.pivot = new Vector2(0f, 0.5f);
+                // Inset 2px from top/bottom so the bar reads as a marker
+                // line rather than a wall — works at any cell height.
                 rt.anchoredPosition = new Vector2(0f, 0f);
-                rt.sizeDelta = new Vector2(4f, 0f);
+                rt.offsetMin = new Vector2(0f, 2f);
+                rt.offsetMax = new Vector2(0f, -2f);
+                // 5px wide — readable but still inside the original hit area.
+                rt.sizeDelta = new Vector2(5f, 0f);
 
                 accentBar = bar.GetComponent<Image>();
                 accentBar.raycastTarget = false;
@@ -97,17 +112,34 @@ namespace TextQuestReader.Cinematic
         {
             if (glowFringe == null) return;
             if (mood == ChoiceMood.Locked) return;
-            glowPhase += Time.deltaTime * 1.4f;
+
+            // Hover speeds up + brightens the breathing glow so the active
+            // choice is unambiguously "live"; idle stays subtle.
+            float speed = isHovered ? 3.2f : 1.4f;
+            glowPhase += Time.deltaTime * speed;
             float wave = 0.5f + 0.5f * Mathf.Sin(glowPhase);
+
             Color c = MoodToColor(mood);
             float baseAlpha = mood switch
             {
-                ChoiceMood.Danger => 0.30f,
-                ChoiceMood.Reward => 0.30f,
-                ChoiceMood.Story => 0.25f,
-                _ => 0.16f
+                ChoiceMood.Danger => 0.34f,
+                ChoiceMood.Reward => 0.32f,
+                ChoiceMood.Story => 0.26f,
+                _ => 0.18f
             };
-            glowFringe.color = new Color(c.r, c.g, c.b, baseAlpha * wave + 0.08f);
+            if (isHovered) baseAlpha *= 1.8f;
+
+            glowFringe.color = new Color(c.r, c.g, c.b, baseAlpha * wave + (isHovered ? 0.18f : 0.08f));
+
+            // Accent bar tracks hover too: more saturated/brighter on hover.
+            if (accentBar != null)
+            {
+                float k = isHovered ? 1f : 0.85f;
+                accentBar.color = new Color(c.r * k + (1f - k) * 0.15f,
+                                            c.g * k + (1f - k) * 0.15f,
+                                            c.b * k + (1f - k) * 0.15f,
+                                            isHovered ? 1f : 0.85f);
+            }
         }
 
         public void SetMood(ChoiceMood newMood)
@@ -115,13 +147,41 @@ namespace TextQuestReader.Cinematic
             EnsureBuilt();
             mood = newMood;
             Color c = MoodToColor(mood);
-            if (accentBar != null) accentBar.color = c;
-            if (moodIcon != null) moodIcon.color = c;
+            if (accentBar != null)
+            {
+                accentBar.color = c;
+                // For Locked, also dim and thin the bar so disabled choices
+                // visually recede instead of competing with active ones.
+                RectTransform rt = (RectTransform)accentBar.transform;
+                if (mood == ChoiceMood.Locked)
+                {
+                    rt.sizeDelta = new Vector2(3f, 0f);
+                    accentBar.color = new Color(c.r, c.g, c.b, 0.45f);
+                }
+                else
+                {
+                    rt.sizeDelta = new Vector2(5f, 0f);
+                }
+            }
+            if (moodIcon != null)
+            {
+                moodIcon.color = mood == ChoiceMood.Locked ? new Color(c.r, c.g, c.b, 0.35f) : c;
+            }
             if (glowFringe != null)
             {
                 if (mood == ChoiceMood.Locked)
                     glowFringe.color = new Color(c.r, c.g, c.b, 0f);
             }
+        }
+
+        public void SetHoverState(bool hover)
+        {
+            // Locked cells ignore hover — they have no live response.
+            if (mood == ChoiceMood.Locked) { isHovered = false; return; }
+            isHovered = hover;
+            // Reset phase on hover-on so the first wave is a clean ramp-up,
+            // not whatever angle the idle sine happened to be at.
+            if (hover) glowPhase = 0f;
         }
 
         public static ChoiceMood InferFromText(string text)
