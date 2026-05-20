@@ -1,4 +1,5 @@
 using System;
+using TextQuestReader.Cinematic.Procedural;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,11 +66,16 @@ namespace TextQuestReader.Monetization
                 rt.anchorMin = new Vector2(1f, 1f);
                 rt.anchorMax = new Vector2(1f, 1f);
                 rt.pivot = new Vector2(1f, 1f);
-                rt.anchoredPosition = new Vector2(-10f, -10f);
-                rt.sizeDelta = new Vector2(120f, 28f);
+                rt.anchoredPosition = new Vector2(-8f, -8f);
+                // Slightly tighter: was 120x28; new 104x22 reads as a chip,
+                // not a banner — won't overlap the long quest titles.
+                rt.sizeDelta = new Vector2(104f, 22f);
                 badgeImage = badgeGo.GetComponent<Image>();
                 badgeImage.raycastTarget = false;
-                badgeImage.color = new Color(0.10f, 0.10f, 0.14f, 0.95f);
+                // Rounded pill, dark fill. Built once; reused by Refresh().
+                badgeImage.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(Color.white, 10, 32);
+                badgeImage.type = Image.Type.Sliced;
+                badgeImage.color = new Color(0.08f, 0.10f, 0.14f, 0.94f);
 
                 GameObject labelGo = new GameObject("Label", typeof(RectTransform));
                 labelGo.transform.SetParent(badgeGo.transform, false);
@@ -77,12 +83,20 @@ namespace TextQuestReader.Monetization
                 RectTransform lrt = badgeText.rectTransform;
                 lrt.anchorMin = Vector2.zero;
                 lrt.anchorMax = Vector2.one;
-                lrt.offsetMin = new Vector2(8f, 2f);
-                lrt.offsetMax = new Vector2(-8f, -2f);
-                badgeText.fontSize = 14f;
+                lrt.offsetMin = new Vector2(8f, 1f);
+                lrt.offsetMax = new Vector2(-8f, -1f);
+                badgeText.fontSize = 12f;
+                badgeText.fontStyle = FontStyles.Bold;
+                badgeText.characterSpacing = 4f;
                 badgeText.alignment = TextAlignmentOptions.Center;
                 badgeText.color = new Color(0.95f, 0.85f, 0.55f, 1f);
                 badgeText.text = "PREMIUM";
+                try
+                {
+                    badgeText.outlineColor = new Color32(0, 0, 0, 200);
+                    badgeText.outlineWidth = 0.15f;
+                }
+                catch { }
             }
 
             if (ctaGo == null)
@@ -93,9 +107,12 @@ namespace TextQuestReader.Monetization
                 rt.anchorMin = new Vector2(1f, 0f);
                 rt.anchorMax = new Vector2(1f, 0f);
                 rt.pivot = new Vector2(1f, 0f);
-                rt.anchoredPosition = new Vector2(-10f, 10f);
-                rt.sizeDelta = new Vector2(150f, 36f);
+                rt.anchoredPosition = new Vector2(-8f, 8f);
+                rt.sizeDelta = new Vector2(160f, 32f);
                 Image bg = ctaGo.GetComponent<Image>();
+                // Rounded pill so it visually pairs with the badge above.
+                bg.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(Color.white, 14, 36);
+                bg.type = Image.Type.Sliced;
                 bg.color = new Color(0.95f, 0.55f, 0.20f, 1f);
                 bg.raycastTarget = true;
                 ctaButton = ctaGo.GetComponent<Button>();
@@ -110,11 +127,18 @@ namespace TextQuestReader.Monetization
                 lrt.anchorMax = Vector2.one;
                 lrt.offsetMin = new Vector2(8f, 2f);
                 lrt.offsetMax = new Vector2(-8f, -2f);
-                ctaLabel.fontSize = 16f;
+                ctaLabel.fontSize = 14f;
                 ctaLabel.alignment = TextAlignmentOptions.Center;
                 ctaLabel.color = Color.white;
                 ctaLabel.text = "Unlock";
                 ctaLabel.fontStyle = FontStyles.Bold;
+                ctaLabel.characterSpacing = 3f;
+                try
+                {
+                    ctaLabel.outlineColor = new Color32(0, 0, 0, 200);
+                    ctaLabel.outlineWidth = 0.18f;
+                }
+                catch { }
             }
         }
 
@@ -127,7 +151,12 @@ namespace TextQuestReader.Monetization
             bool showCta = state == QuestAccessState.LockedPremium && product != null;
 
             if (veilImage != null)
-                veilImage.color = showVeil ? new Color(0f, 0f, 0f, 0.55f) : new Color(0f, 0f, 0f, 0f);
+            {
+                // Old veil was 0.55 alpha — heavy enough to mask card text on
+                // dark backgrounds. 0.38 still reads as "locked / not active"
+                // but keeps the quest title legible.
+                veilImage.color = showVeil ? new Color(0f, 0f, 0f, 0.38f) : new Color(0f, 0f, 0f, 0f);
+            }
 
             if (badgeGo != null)
             {
@@ -136,17 +165,20 @@ namespace TextQuestReader.Monetization
                 if (state == QuestAccessState.OwnedPremium)
                 {
                     badgeText.text = "OWNED";
-                    badgeText.color = new Color(0.4f, 0.95f, 0.6f, 1f);
+                    badgeText.color = new Color(0.45f, 0.97f, 0.62f, 1f);
+                    if (badgeImage != null) badgeImage.color = new Color(0.04f, 0.10f, 0.06f, 0.94f);
                 }
                 else if (state == QuestAccessState.LockedPremium)
                 {
                     badgeText.text = "PREMIUM";
-                    badgeText.color = new Color(0.95f, 0.85f, 0.55f, 1f);
+                    badgeText.color = new Color(0.97f, 0.85f, 0.55f, 1f);
+                    if (badgeImage != null) badgeImage.color = new Color(0.10f, 0.07f, 0.04f, 0.94f);
                 }
                 else if (isFeatured)
                 {
                     badgeText.text = "FEATURED";
-                    badgeText.color = new Color(0.55f, 0.85f, 0.95f, 1f);
+                    badgeText.color = new Color(0.55f, 0.88f, 0.97f, 1f);
+                    if (badgeImage != null) badgeImage.color = new Color(0.04f, 0.07f, 0.12f, 0.94f);
                 }
             }
 
