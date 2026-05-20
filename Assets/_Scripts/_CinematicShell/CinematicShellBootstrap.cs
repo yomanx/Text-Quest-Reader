@@ -15,12 +15,19 @@ namespace TextQuestReader.CinematicShell
     {
         private static CinematicShellBootstrap instance;
 
-        // Auto-init disabled by user request — the runtime-built shell was
-        // replacing the original UI with bare procedural surfaces, which felt
-        // worse than the original prefab UI. The shell code is kept in the
-        // project so it can be re-enabled (or evolved) later, but it no
-        // longer activates on Play. The original GamePanel UI stays visible.
-        // To re-enable, restore the [RuntimeInitializeOnLoadMethod] attribute.
+        // ⚠️  THEME-EFFECTS-ONLY BRANCH NOTICE  ⚠️
+        // ─────────────────────────────────────────────────────────────────
+        // The CinematicShell is intentionally DISABLED on this branch and
+        // must remain disabled. Do NOT:
+        //   • Restore the [RuntimeInitializeOnLoadMethod] attribute below.
+        //   • Call AutoInit_Disabled() from any other class.
+        //   • Add a new static initializer / Awake hook that spawns this
+        //     component manually.
+        //   • Reactivate LegacyUiSuppressor or MainMenuTerminalSkin.
+        // The original GamePanel-driven UI is the canonical reader/catalog.
+        // See docs/THEME_EFFECTS_AUDIT.md for the full keep/avoid map.
+        // The shell folder itself is kept so the code still compiles and
+        // we don't lose history, but no runtime entry point exists.
         private static void AutoInit_Disabled()
         {
             if (instance != null) return;

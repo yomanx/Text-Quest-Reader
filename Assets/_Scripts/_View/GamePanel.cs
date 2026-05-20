@@ -116,13 +116,17 @@ public class GamePanel : MonoBehaviour
         proceduralBackground = ProceduralSceneRenderer.Attach(mainPictureRect, siblingIndex: 0);
     }
 
+    // MainMenuTerminalSkin is kept dormant on theme-effects-only.
+    // See docs/THEME_EFFECTS_AUDIT.md — do not re-enable from here.
     private MainMenuTerminalSkin mainMenuSkin;
 
     private void EnsureMainMenuSkin()
     {
-        if (mainMenuSkin != null) return;
-        if (canvas == null) return;
-        mainMenuSkin = MainMenuTerminalSkin.Attach(canvas);
+        // INTENTIONALLY EMPTY on theme-effects-only branch.
+        // The previous body called MainMenuTerminalSkin.Attach(canvas)
+        // which overlaid a sci-fi header on the original UI. That was
+        // user-rejected. Do not restore.
+        return;
     }
 
     private void EnsureResultScreen()
