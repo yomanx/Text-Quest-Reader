@@ -38,6 +38,7 @@ namespace TextQuestReader.CinematicShell
         private TextMeshProUGUI mainText;
         private RectTransform choicesContent;
         private Image holoMonitor;
+        private Image holoRealImage;
         private TextMeshProUGUI holoLabel;
         private TextMeshProUGUI locationLabel;
         private Button exitButton;
@@ -91,6 +92,45 @@ namespace TextQuestReader.CinematicShell
                 locationLabel.text = "// LOCATION " + location.id.ToString("D2") + " //";
             if (hud != null && gamePanel != null && gamePanel.HasActivePlayer && gamePanel.Player != null && gamePanel.Player.quest != null)
                 hud.Refresh(gamePanel.Player.quest);
+        }
+
+        private string pendingRealImageName;
+        private float pendingRealImageDeadline;
+
+        public void ApplyRealImage(string imageName)
+        {
+            if (holoRealImage == null || gamePanel == null) return;
+            if (string.IsNullOrEmpty(imageName))
+            {
+                holoRealImage.color = new Color(1f, 1f, 1f, 0f);
+                pendingRealImageName = null;
+                return;
+            }
+            pendingRealImageName = imageName;
+            pendingRealImageDeadline = Time.realtimeSinceStartup + 3f;
+        }
+
+        private void PollPendingRealImage()
+        {
+            if (string.IsNullOrEmpty(pendingRealImageName)) return;
+            if (Time.realtimeSinceStartup > pendingRealImageDeadline)
+            {
+                pendingRealImageName = null;
+                return;
+            }
+            if (gamePanel == null || gamePanel.PictureNode == null) return;
+            Image inner = ReflectInnerPicture(gamePanel.PictureNode);
+            if (inner == null || inner.sprite == null) return;
+            if (holoRealImage.sprite == inner.sprite) { pendingRealImageName = null; return; }
+            holoRealImage.sprite = inner.sprite;
+            holoRealImage.color = new Color(1f, 1f, 1f, 1f);
+            pendingRealImageName = null;
+        }
+
+        private Image ReflectInnerPicture(PictureNode node)
+        {
+            System.Reflection.FieldInfo info = typeof(PictureNode).GetField("innerPicture", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return info?.GetValue(node) as Image;
         }
 
         public void SetMainText(string text)
@@ -153,6 +193,8 @@ namespace TextQuestReader.CinematicShell
 
         private void Update()
         {
+            PollPendingRealImage();
+
             if (canvasGroup == null || canvasGroup.alpha < 0.99f) return;
 
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
@@ -307,6 +349,18 @@ namespace TextQuestReader.CinematicShell
             holoMonitor.raycastTarget = false;
             holoMonitor.sprite = ProceduralTextureFactory.CreateRadialGlowSprite(new Color(0.20f, 0.85f, 1f, 0.65f), 1.4f, 192);
             holoMonitor.color = Color.white;
+
+            GameObject realImgGo = new GameObject("RealImage", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            realImgGo.transform.SetParent(mrt, false);
+            RectTransform realRt = (RectTransform)realImgGo.transform;
+            realRt.anchorMin = Vector2.zero;
+            realRt.anchorMax = Vector2.one;
+            realRt.offsetMin = new Vector2(4f, 4f);
+            realRt.offsetMax = new Vector2(-4f, -4f);
+            holoRealImage = realImgGo.GetComponent<Image>();
+            holoRealImage.raycastTarget = false;
+            holoRealImage.preserveAspect = true;
+            holoRealImage.color = new Color(1f, 1f, 1f, 0f);
 
             GameObject scanGo = new GameObject("MonitorScanlines", typeof(RectTransform));
             scanGo.transform.SetParent(mrt, false);

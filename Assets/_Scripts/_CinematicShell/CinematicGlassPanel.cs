@@ -93,10 +93,10 @@ namespace TextQuestReader.CinematicShell
             RectTransform ort = (RectTransform)outline.transform;
             ort.anchorMin = Vector2.zero;
             ort.anchorMax = Vector2.one;
-            ort.offsetMin = new Vector2(-2f, -2f);
-            ort.offsetMax = new Vector2(2f, 2f);
+            ort.offsetMin = new Vector2(-1f, -1f);
+            ort.offsetMax = new Vector2(1f, 1f);
             Image oimg = outline.GetComponent<Image>();
-            oimg.sprite = roundSprite;
+            oimg.sprite = ProceduralTextureFactory.CreateRoundedRectBorderSprite(Color.white, 2, radius, radius * 4);
             oimg.type = Image.Type.Sliced;
             oimg.color = config.OutlineColor;
             oimg.raycastTarget = false;

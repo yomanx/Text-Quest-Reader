@@ -69,6 +69,7 @@ public class GamePanel : MonoBehaviour
     public event Action<Passage> SinglePassageReady;
     public event Action<List<TextQuestReader.Monetization.CatalogEntry>, Source, string> CatalogReady;
     public event Action<QuestShort, bool> QuestPreviewSelected;
+    public event Action<string> LocationImageChanged;
 
     public enum Source { Local, Remote }
     public Source CurrentSource { get; private set; }
@@ -1051,7 +1052,10 @@ public class GamePanel : MonoBehaviour
         List<CinematicTagInfo> cinematicTags = CinematicTagParser.ExtractFromText(ref text, textParser);
 
         if (!string.IsNullOrEmpty(imageName))
+        {
             pictureNode.SetNewPicture(imageName, player.quest.questName, mayBeSame: false);
+            LocationImageChanged?.Invoke(imageName);
+        }
 
         string proceduralKey = !string.IsNullOrEmpty(bgName) ? bgName : imageName;
         if (!string.IsNullOrEmpty(proceduralKey) && proceduralBackground != null)

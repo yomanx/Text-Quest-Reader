@@ -213,6 +213,76 @@ namespace TextQuestReader.Cinematic.Procedural
             return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(radius, radius, radius, radius));
         }
 
+        /// <summary>
+        /// Hollow rounded-rect border. Pixels inside the inner ring are fully
+        /// transparent; only the border band carries alpha. Use with
+        /// Image.Type.Sliced and Vector4 border to make the corners scale
+        /// correctly. This is the sprite to put on an "outline" overlay so it
+        /// doesn't overdraw the panel base.
+        /// </summary>
+        public static Sprite CreateRoundedRectBorderSprite(Color color, int borderThickness = 3, int radius = 18, int size = 64)
+        {
+            size = Mathf.Max(size, (radius + borderThickness) * 2 + 4);
+            Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            tex.hideFlags = HideFlags.DontSave;
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.filterMode = FilterMode.Bilinear;
+            Color[] pixels = new Color[size * size];
+            Color empty = new Color(color.r, color.g, color.b, 0f);
+
+            float outerRadius = radius;
+            float innerRadius = Mathf.Max(1f, radius - borderThickness);
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    int distLeft = x;
+                    int distRight = (size - 1) - x;
+                    int distBottom = y;
+                    int distTop = (size - 1) - y;
+                    int dxEdge = Mathf.Min(distLeft, distRight);
+                    int dyEdge = Mathf.Min(distBottom, distTop);
+
+                    bool inCorner = dxEdge < radius && dyEdge < radius;
+
+                    if (inCorner)
+                    {
+                        float cx = radius - dxEdge;
+                        float cy = radius - dyEdge;
+                        float d = Mathf.Sqrt(cx * cx + cy * cy);
+                        if (d > outerRadius + 0.5f)
+                        {
+                            pixels[y * size + x] = empty;
+                            continue;
+                        }
+                        if (d < innerRadius - 0.5f)
+                        {
+                            pixels[y * size + x] = empty;
+                            continue;
+                        }
+                        float aa = 1f - Mathf.Clamp01(d - innerRadius);
+                        if (d > outerRadius - 0.5f) aa *= Mathf.Clamp01(outerRadius - d + 0.5f);
+                        pixels[y * size + x] = new Color(color.r, color.g, color.b, color.a * aa);
+                    }
+                    else
+                    {
+                        bool onBorder = dxEdge < borderThickness || dyEdge < borderThickness;
+                        if (onBorder)
+                            pixels[y * size + x] = new Color(color.r, color.g, color.b, color.a);
+                        else
+                            pixels[y * size + x] = empty;
+                    }
+                }
+            }
+            tex.SetPixels(pixels);
+            tex.Apply();
+            int sliceMargin = radius + borderThickness;
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(sliceMargin, sliceMargin, sliceMargin, sliceMargin));
+            sprite.hideFlags = HideFlags.DontSave;
+            return sprite;
+        }
+
         public static Sprite CreateCornerBracketSprite(Color color, int thickness = 3, int length = 32, int size = 48)
         {
             Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);

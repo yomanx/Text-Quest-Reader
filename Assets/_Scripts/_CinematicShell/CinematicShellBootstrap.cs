@@ -136,6 +136,7 @@ namespace TextQuestReader.CinematicShell
             gamePanel.SinglePassageReady += OnSinglePassageReady;
             gamePanel.QuestEnded += OnQuestEnded;
             gamePanel.StartQuestEnded += OnStartQuestEnded;
+            gamePanel.LocationImageChanged += OnLocationImageChanged;
         }
 
         private void OnDestroy()
@@ -150,8 +151,15 @@ namespace TextQuestReader.CinematicShell
                 gamePanel.SinglePassageReady -= OnSinglePassageReady;
                 gamePanel.QuestEnded -= OnQuestEnded;
                 gamePanel.StartQuestEnded -= OnStartQuestEnded;
+                gamePanel.LocationImageChanged -= OnLocationImageChanged;
             }
             if (instance == this) instance = null;
+        }
+
+        private void OnLocationImageChanged(string imageName)
+        {
+            if (readerScreen == null) return;
+            readerScreen.ApplyRealImage(imageName);
         }
 
         private void OnCatalogReady(System.Collections.Generic.List<TextQuestReader.Monetization.CatalogEntry> entries, GamePanel.Source source, string preselect)

@@ -52,9 +52,9 @@ namespace TextQuestReader.Monetization
             frt.offsetMin = new Vector2(-4f, -4f);
             frt.offsetMax = new Vector2(4f, 4f);
             Image frameImg = frame.GetComponent<Image>();
-            frameImg.sprite = ProceduralTextureFactory.CreateRoundedRectSprite(new Color(0.5f, 0.8f, 1f, 1f), 22, 96);
+            frameImg.sprite = ProceduralTextureFactory.CreateRoundedRectBorderSprite(Color.white, 2, 22, 96);
             frameImg.type = Image.Type.Sliced;
-            frameImg.color = new Color(0.5f, 0.85f, 1f, 0.55f);
+            frameImg.color = new Color(0.5f, 0.85f, 1f, 0.85f);
             frameImg.raycastTarget = false;
 
             CreateLabel(panel.transform, product.displayName ?? product.id, 24, FontStyles.Bold, new Vector2(0f, 0.78f), new Vector2(1f, 0.95f), TextAlignmentOptions.Center);
