@@ -102,7 +102,9 @@ public class GamePanel : MonoBehaviour
         EnsureMonetizationService();
         EnsureResultScreen();
         EnsureProceduralBackground();
-        EnsureMainMenuSkin();
+        // EnsureMainMenuSkin disabled — the sci-fi header label collided with
+        // the original UI. Procedural background still works inside mainPictureRect
+        // as a fallback when a quest has no image asset.
     }
 
     private ProceduralSceneRenderer proceduralBackground;
